@@ -1,3 +1,0 @@
-###################
-CodeIgniter Bootstrap FontAwesome
-###################
