@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Inside extends CI_Controller {
@@ -26,11 +26,11 @@ class Inside extends CI_Controller {
 			$this->load->view('footer');
 		}else{
 			redirect('signin');
-		}	
+		}
 	}
 
 	function schedule(){
-		
+
 		$data['title'] = 'SIMO - Escalas';
 		$data['fullname'] = $this->session->userdata['fullname'];
 		$data['menu'] = '4';
@@ -38,39 +38,40 @@ class Inside extends CI_Controller {
 		$this->load->view('headerint', $data);
 		$this->load->view('schedule/index', $data);
 		$this->load->view('footer');
-	
+
 
 	}
 
 	function settings(){
-		
+
 		$data['title'] = 'SIMO - Configurações';
 		$data['fullname'] = $this->session->userdata['fullname'];
 		$data['tab'] = $this->input->get('tab');
 		$data['message'] = $this->input->get('message');
+		$data['menu'] = '0';
 		$data['error'] = $this->input->get('error');
 
 
-  		$this->load->view('headerint', $data);
+  	$this->load->view('headerint', $data);
 		$this->load->view('settings');
 		$this->load->view('footer');
-    }    
+    }
 
 
-	
+
 	function set_password(){
-    	
+
     	$curr = $this->input->post('currpassword');
 		$new = $this->input->post('newpassword');
     	$conf = $this->input->post('newpasswordconf');
-    	
+
     	if ($new != $conf){
-			
+
 			redirect('settings?tab=1&message=2');
 
 		}
 		if ($curr == $new){
-			redirect('settings?tab=1&message=4');			
+			redirect('settings?tab=1&message=4');
 		}
 		else{
 			//caso senhas são iguais confira senha atual no banco
@@ -86,8 +87,8 @@ class Inside extends CI_Controller {
 				redirect('settings?tab=1&message=1');
 			}else{
 				redirect('settings?tab=1&message=3');
-			}	
-			
+			}
+
 		}
 	}
 
@@ -97,9 +98,9 @@ class Inside extends CI_Controller {
     	$this->form_validation->set_rules("email", "email", "valid_email|is_unique[usuarios.email]");
     	$this->form_validation->set_rules('username', 'username', 'trim');
     	$this->form_validation->set_rules('nomedeguerra', 'nomedeguerra', 'trim');
-		
+
 		$this->load->model('settings_database');
-        
+
 		$nomedeguerra = strtoupper($this->input->post('nomedeguerra'));
 		//$data_cadastro  = date('Y-m-d H:i:s');
 		//echo $data_cadastro;
@@ -134,7 +135,7 @@ class Inside extends CI_Controller {
 		}
 		if ($username != false){
 			redirect('settings?tab=2&error=2');
-		}	
+		}
 		if ($nomedeguerra != false){
 			redirect('settings?tab=2&error=3');
 		}
@@ -157,7 +158,7 @@ class Inside extends CI_Controller {
 		$this->form_validation->set_rules('newpasswordconf', 'newpasswordconf', 'required');
 		$newpassword = $this->input->post('newpassword');
     	$conf = $this->input->post('newpasswordconf');
-    	
+
     	if ($newpassword != $conf){
 			redirect('home?x=y&message=1');
 		}
@@ -171,7 +172,7 @@ class Inside extends CI_Controller {
 
 		$data['currpassword'] = 123;
 		$result = $this->settings_database->change_password($data);
-		
+
 		if ($result != false) {
 			redirect('home?x=y&message=4');
 		}else{
@@ -186,6 +187,3 @@ class Inside extends CI_Controller {
 	}
 }
 ?>
-
-
-
