@@ -57,7 +57,6 @@ $route['translate_uri_dashes'] = FALSE;
 $route['welcome'] = 'Welcome/index';
 $route['signin'] = 'Welcome/signin';
 
-
 //inside system
 $route['home'] = 'Inside/home';
 $route['schedule'] = 'Inside/schedule';

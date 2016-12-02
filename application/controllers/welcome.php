@@ -31,38 +31,31 @@ class Welcome extends CI_Controller{
             );
 
         if ($this->form_validation->run() == FALSE) {
-            if(isset($this->session->userdata['logged'])){
+            if($this->session->userdata['logged']){
                 redirect('home');
             }else{
                 $data['title'] = 'SIMO - Entrar';
                 $data['activemenu'] = '2';
                 $data['error'] = '0';
-                $this->load->view('headerext',$data);
-                $this->load->view('signin');
-                $this->load->view('footerext');
+                $data['body'] = 'signin';
+                $this->load->view('outside',$data);
             }
         }else{
             $result = $this->login_database->authenticate($data);
-
-            if ($result != false) {
-
-                $result = $this->login_database->read_user_information($data['username']);
-                //tratar erro
-                $first_time_check = $this->login_database->first_time_check($data);
-                if ($first_time_check != false) {
-                    $last_login_update = $this->login_database->last_login_update($data);
-                    //tratar erro
-
-                    redirect('home?x=y');
+            if ($result){
+              $first_time_check = $this->login_database->first_time_check($data);
+                if($first_time_check) {
+                  $last_login_update = $this->login_database->last_login_update($data);
+                  redirect('home?x=y');
+                }else{
+                  redirect('home');
                 }
-                redirect('home');
             }else{
-                $data['title'] = 'SIMO - Entrar';
-                $data['activemenu'] = '2';
-                $data['error'] = '1';
-                $this->load->view('headerext',$data);
-                $this->load->view('signin');
-                $this->load->view('footerext');
+              $data['title'] = 'SIMO - Entrar';
+              $data['activemenu'] = '2';
+              $data['error'] = '1';
+              $data['body'] = 'signin';
+              $this->load->view('outside',$data);
             }
         }
     }

@@ -4,7 +4,7 @@ Class Login_Database extends CI_Model {
 
     function authenticate($data) {
 
-        $data['password'] = md5($data['password']); 
+        $data['password'] = md5($data['password']);
         $condition = "username =" . "'" . $data['username'] . "' AND " . "password =" . "'" . $data['password'] . "'";
         $this->db->select('*');
         $this->db->from('usuarios');
@@ -17,7 +17,7 @@ Class Login_Database extends CI_Model {
         }else{
             return false;
         }
-    }    
+    }
 
     function last_login_update($data){
 
@@ -40,7 +40,7 @@ Class Login_Database extends CI_Model {
         $result = str_replace("-", "", $result);
         $result = str_replace(":", "", $result);
         $result = str_replace(" ", "", $result);
-        
+
         $first = '00000000000000';
 
         if ($result == $first){
@@ -49,7 +49,7 @@ Class Login_Database extends CI_Model {
 
             return false;
         }
-        
+
      }
 
     function read_user_information($username) {
@@ -85,5 +85,16 @@ Class Login_Database extends CI_Model {
 
         return($result);
     }
+
+    public function isLogged(){
+      if($this->session->userdata['logged']){
+        return true;
+      }
+      else{
+        return false;
+      };
+    }
+
+
 }
 ?>

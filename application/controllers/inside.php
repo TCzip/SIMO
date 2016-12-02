@@ -5,41 +5,37 @@ class Inside extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		$this->load->helper('url');
-        $this->load->helper('form');
-        $this->load->library('form_validation');
-        $this->load->library('session');
-        $this->load->helper('date');
-
+			$this->load->helper('url');
+      $this->load->helper('form');
+      $this->load->library('form_validation');
+      $this->load->library('session');
+      $this->load->helper('date');
+			$this->load->model('login_database');
+			$this->session->userdata['logged'] = true;
+			if(!$this->login_database->isLogged()){
+				redirect('signin');
+			}
 	}
 
 	function home(){
 
-		if(isset($this->session->userdata['logged'])){
 			$data['title'] = 'SIMO - Início';
 			$data['fullname'] = $this->session->userdata['fullname'];
 			$data['menu'] = '1';
 			$data['x'] = $this->input->get('x');
 			$data['message'] = $this->input->get('message');
-			$this->load->view('headerint', $data);
-			$this->load->view('home');
-			$this->load->view('footer');
-		}else{
-			redirect('signin');
-		}
+			$data['body'] = 'home';
+			$this->load->view('inside',$data);
+
 	}
 
 	function schedule(){
-
 		$data['title'] = 'SIMO - Escalas';
 		$data['fullname'] = $this->session->userdata['fullname'];
 		$data['menu'] = '4';
 		$data['user_level'] = $this->session->userdata['user_level'];
-		$this->load->view('headerint', $data);
-		$this->load->view('schedule/index', $data);
-		$this->load->view('footer');
-
-
+		$data['body'] = 'schedule/index';
+		$this->load->view('inside', $data);
 	}
 
 	function settings(){

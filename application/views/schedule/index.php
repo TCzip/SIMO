@@ -2,9 +2,9 @@
   	<div class="starter-template">
         <center>
         <div class="list-group" style="text-align:left; ">
-        	<?php 
+        	<?php
         	if ($user_level == 1){
-        		echo '	
+        		echo '
           	<a href="#"  class="list-group-item"><i class="fa fa-search fa-2x pull-left"></i>
 	            <h4 class="list-group-item-heading">Consulta de escalas</h4>
 	            <p class="list-group-item-text">Consulta a escalas mensais </p>
@@ -21,7 +21,7 @@
 
 	            <h4 class="list-group-item-heading">Criação de Escalas </h4>
 	            <p class="list-group-item-text">Criação de escala do 0800 </p>
-	            
+
           	</a>
             <a href="#"  class="list-group-item"><i class="fa fa-retweet fa-2x pull-left"></i>
 	            <h4 class="list-group-item-heading">Troca de serviços Extraordinários </h4>
