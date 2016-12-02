@@ -1,7 +1,7 @@
-<?php if (! defined('BASEPATH')) exit('No direct script access allowed'); 
- 
+<?php if (! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Welcome extends CI_Controller{
-    
+
     function __construct(){
 
         parent::__construct();
@@ -9,20 +9,18 @@ class Welcome extends CI_Controller{
         $this->load->library('form_validation');
         $this->load->library('session');
         $this->load->model('login_database');
-    }    
+    }
 
     function index(){
 
         $data['title'] = 'SIMO - Bem Vindo';
         $data['activemenu'] = '1';
-
-        $this->load->view('headerext',$data);
-        $this->load->view('welcome');
-        $this->load->view('footer');
+        $data['body'] = 'welcome';
+        $this->load->view('outside',$data);
     }
 
     function signin(){
-        
+
         $this->form_validation->set_rules('username', 'Username', 'trim');
         $this->form_validation->set_rules('password', 'Password', 'trim');
 
@@ -31,7 +29,7 @@ class Welcome extends CI_Controller{
             'username' => $this->input->post('username'),
             'password' => $this->input->post('password')
             );
-               
+
         if ($this->form_validation->run() == FALSE) {
             if(isset($this->session->userdata['logged'])){
                 redirect('home');
@@ -54,10 +52,10 @@ class Welcome extends CI_Controller{
                 if ($first_time_check != false) {
                     $last_login_update = $this->login_database->last_login_update($data);
                     //tratar erro
-                    
+
                     redirect('home?x=y');
                 }
-                redirect('home');    
+                redirect('home');
             }else{
                 $data['title'] = 'SIMO - Entrar';
                 $data['activemenu'] = '2';
@@ -68,5 +66,5 @@ class Welcome extends CI_Controller{
             }
         }
     }
-}    
+}
 ?>

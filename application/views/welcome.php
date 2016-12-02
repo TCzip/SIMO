@@ -1,4 +1,4 @@
-    
+
     <div class="container"><!-- Conteúdo Bem vindo -->
       <div class="jumbotron"  style="margin-top:-55px; background-image: url('<?php echo base_url('assets/img/ciccr2.jpg') ?>'); color:#fff;">
         <br><br>
@@ -10,4 +10,3 @@
         <!--<button type="button" class="btn btn-lg btn-danger"><i class="fa fa-download"></i> Baixar manual (.pdf)</button>-->
       </div>
     </div><!-- /.container -->
-    
