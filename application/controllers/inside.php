@@ -33,7 +33,7 @@ class Inside extends CI_Controller {
 		$data['title'] = 'SIMO - Escalas';
 		$data['fullname'] = $this->session->userdata['fullname'];
 		$data['menu'] = '4';
-		$data['user_level'] = $this->session->userdata['user_level'];
+		$data['idPermission'] = $this->session->userdata['idPermission'];
 		$data['body'] = 'schedule/index';
 		$this->load->view('inside', $data);
 	}
@@ -106,7 +106,7 @@ class Inside extends CI_Controller {
         'email' => $this->input->post('email'),
         'username' => $this->input->post('username'),
         'nomedeguerra' => $nomedeguerra,
-        'user_level' => $this->input->post('userlevel'),
+        'idPermission' => $this->input->post('userlevel'),
         'password' => '202cb962ac59075b964b07152d234b70',
         'data_cadastro' => date('Y-m-d H:i:s'),
         );

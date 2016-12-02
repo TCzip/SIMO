@@ -3,7 +3,7 @@
         <center>
         <div class="list-group" style="text-align:left; ">
         	<?php
-        	if ($user_level == 1){
+        	if ($idPermission == 1){
         		echo '
           	<a href="#"  class="list-group-item"><i class="fa fa-search fa-2x pull-left"></i>
 	            <h4 class="list-group-item-heading">Consulta de escalas</h4>
@@ -15,7 +15,7 @@
           	</a>
           	';
             }
-            if ($user_level == 2){
+            if ($idPermission == 2){
         		echo '
             <a href="#"  class="list-group-item"><i class="fa fa-calendar fa-2x pull-left"></i>
 

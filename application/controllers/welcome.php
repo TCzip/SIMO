@@ -31,7 +31,7 @@ class Welcome extends CI_Controller{
             );
 
         if ($this->form_validation->run() == FALSE) {
-            if($this->session->userdata['logged']){
+            if(isset($this->session->userdata['logged'])){
                 redirect('home');
             }else{
                 $data['title'] = 'SIMO - Entrar';
