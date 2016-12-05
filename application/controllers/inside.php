@@ -11,7 +11,7 @@ class Inside extends CI_Controller {
       $this->load->library('session');
       $this->load->helper('date');
 			$this->load->model('login_database');
-			$this->session->userdata['logged'] = true;
+			$this->session->userdata['logged'] = true;//logged false é o certo, ativar depois dos testes
 			if(!$this->login_database->isLogged()){
 				redirect('signin');
 			}
@@ -25,6 +25,7 @@ class Inside extends CI_Controller {
 			$data['x'] = $this->input->get('x');
 			$data['message'] = $this->input->get('message');
 			$data['body'] = 'home';
+
 			$this->load->view('inside',$data);
 
 	}
@@ -35,6 +36,7 @@ class Inside extends CI_Controller {
 		$data['menu'] = '4';
 		$data['idPermission'] = $this->session->userdata['idPermission'];
 		$data['body'] = 'schedule/index';
+
 		$this->load->view('inside', $data);
 	}
 
@@ -47,7 +49,6 @@ class Inside extends CI_Controller {
 		$data['menu'] = '0';
 		$data['error'] = $this->input->get('error');
 
-
   	$this->load->view('headerint', $data);
 		$this->load->view('settings');
 		$this->load->view('footer');
@@ -57,74 +58,62 @@ class Inside extends CI_Controller {
 
 	function set_password(){
 
-    	$curr = $this->input->post('currpassword');
+    $curr = $this->input->post('currpassword');
 		$new = $this->input->post('newpassword');
-    	$conf = $this->input->post('newpasswordconf');
+    $conf = $this->input->post('newpasswordconf');
 
-    	if ($new != $conf){
-
+    if ($new != $conf){
 			redirect('settings?tab=1&message=2');
-
 		}
 		if ($curr == $new){
 			redirect('settings?tab=1&message=4');
 		}
 		else{
-			//caso senhas são iguais confira senha atual no banco
 			$this->load->model('settings_database');
-	        $data = array(
-	        'username' => $this->session->userdata['username'],
-	        'currpassword' => $this->input->post('currpassword'),
-	        'newpassword' => $this->input->post('newpassword'),
-	        'newpasswordconf' => $this->input->post('newpasswordconf'),
-	        );
+	    $data = array(
+        'username' => $this->session->userdata['username'],
+        'currpassword' => $this->input->post('currpassword'),
+        'newpassword' => $this->input->post('newpassword'),
+        'newpasswordconf' => $this->input->post('newpasswordconf'),
+      );
 			$result = $this->settings_database->change_password($data);
 			if ($result != false) {
 				redirect('settings?tab=1&message=1');
 			}else{
 				redirect('settings?tab=1&message=3');
 			}
-
 		}
 	}
-
 	function new_user(){
 
-    	$this->form_validation->set_rules('fullname', 'fullname', 'trim');
-    	$this->form_validation->set_rules("email", "email", "valid_email|is_unique[usuarios.email]");
-    	$this->form_validation->set_rules('username', 'username', 'trim');
-    	$this->form_validation->set_rules('nomedeguerra', 'nomedeguerra', 'trim');
+  	$this->form_validation->set_rules('fullname', 'fullname', 'trim');
+  	$this->form_validation->set_rules("email", "email", "valid_email|is_unique[usuarios.email]");
+  	$this->form_validation->set_rules('username', 'username', 'trim');
+  	$this->form_validation->set_rules('nomedeguerra', 'nomedeguerra', 'trim');
 
 		$this->load->model('settings_database');
 
 		$nomedeguerra = strtoupper($this->input->post('nomedeguerra'));
-		//$data_cadastro  = date('Y-m-d H:i:s');
-		//echo $data_cadastro;
-		//die();
-        $data = array(
-        'fullname' => $this->input->post('fullname'),
-        'email' => $this->input->post('email'),
-        'username' => $this->input->post('username'),
-        'nomedeguerra' => $nomedeguerra,
-        'idPermission' => $this->input->post('userlevel'),
-        'password' => '202cb962ac59075b964b07152d234b70',
-        'data_cadastro' => date('Y-m-d H:i:s'),
-        );
-
-        //email is valid?
-        $email = $this->settings_database->verifica_email($data);
-        if ($email == false) {
+    $data = array(
+      'fullname' => $this->input->post('fullname'),
+      'email' => $this->input->post('email'),
+      'username' => $this->input->post('username'),
+      'nomedeguerra' => $nomedeguerra,
+      'idPermission' => $this->input->post('userlevel'),
+      'password' => '202cb962ac59075b964b07152d234b70',
+      'data_cadastro' => date('Y-m-d H:i:s'),
+    );
+		//email is a valid email?
+    $email = $this->settings_database->verifica_email($data);
+    if ($email == false) {
 			redirect('settings?tab=2&error=4');
 		}
-
-        //email already exist?
-        $email = $this->settings_database->check_exist_email($data);
-
-        //username already exist?
-        $username = $this->settings_database->check_exist_username($data);
-
-        //nomedeguerra already exist?
-        $nomedeguerra = $this->settings_database->check_exist_nomedeguerra($data);
+    //email already exist?
+    $email = $this->settings_database->check_exist_email($data);
+    //username already exist?
+    $username = $this->settings_database->check_exist_username($data);
+    //nomedeguerra already exist?
+    $nomedeguerra = $this->settings_database->check_exist_nomedeguerra($data);
 
 		if ($email != false) {
 			redirect('settings?tab=2&error=1');
@@ -135,17 +124,13 @@ class Inside extends CI_Controller {
 		if ($nomedeguerra != false){
 			redirect('settings?tab=2&error=3');
 		}
-
 		//everything right then register
 		$result = $this->settings_database->add_user($data);
-
-        if ($result != false) {
-            redirect('settings?tab=2&error=6');
-        }else {
-            redirect('settings?tab=2&error=5');
-        }
-
-
+    if ($result != false) {
+        redirect('settings?tab=2&error=6');
+    }else {
+        redirect('settings?tab=2&error=5');
+    }
 	}
 
 	function first_login(){
@@ -153,9 +138,9 @@ class Inside extends CI_Controller {
 		$this->form_validation->set_rules('newpassword', 'newpassword', 'required');
 		$this->form_validation->set_rules('newpasswordconf', 'newpasswordconf', 'required');
 		$newpassword = $this->input->post('newpassword');
-    	$conf = $this->input->post('newpasswordconf');
+  	$conf = $this->input->post('newpasswordconf');
 
-    	if ($newpassword != $conf){
+  	if ($newpassword != $conf){
 			redirect('home?x=y&message=1');
 		}
 		if ($newpassword == 123){
@@ -164,6 +149,7 @@ class Inside extends CI_Controller {
 		$data['username'] = $this->session->userdata['username'];
 		$data['currpassword'] = 123;
 		$data['newpassword'] = $newpassword;
+
 		$this->load->model('settings_database');
 
 		$data['currpassword'] = 123;
@@ -174,6 +160,23 @@ class Inside extends CI_Controller {
 		}else{
 			redirect('home?x=y&message=3');
 		}
+	}
+
+	function schedule_create(){
+
+		$data['title'] = 'SIMO - Criar Escala';
+		$data['fullname'] = $this->session->userdata['fullname'];
+		$data['menu'] = '4';
+		//$data['idPermission'] = $this->session->userdata['idPermission'];
+		$data['body'] = 'schedule/create';
+
+		$this->load->model('Schedule_database');
+		$results = $this->Schedule_database->selectProfessional();
+		// $data['results'] = $results;
+
+
+
+		$this->load->view('inside', $data);
 	}
 
 	function logout(){

@@ -60,6 +60,7 @@ $route['signin'] = 'Welcome/signin';
 //inside system
 $route['home'] = 'Inside/home';
 $route['schedule'] = 'Inside/schedule';
+$route['create'] = 'Inside/schedule_create';
 $route['settings'] = 'Inside/settings';
 
 
