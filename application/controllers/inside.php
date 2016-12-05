@@ -167,16 +167,17 @@ class Inside extends CI_Controller {
 		$data['title'] = 'SIMO - Criar Escala';
 		$data['fullname'] = $this->session->userdata['fullname'];
 		$data['menu'] = '4';
-		//$data['idPermission'] = $this->session->userdata['idPermission'];
+		$data['message'] = null;
 		$data['body'] = 'schedule/create';
-
 		$this->load->model('Schedule_database');
-		$results = $this->Schedule_database->selectProfessional();
-		// $data['results'] = $results;
-
-
-
-		$this->load->view('inside', $data);
+		$post = $this->input->post();
+		if ($this->form_validation->run() != TRUE) {
+			$data['nickname'] = $this->Schedule_database->selectNickname('1');
+			echo($this->form_validation->run());
+			$this->load->view('inside', $data);
+		}else {
+			$result = $this->Schedule_database->newEntry($post);
+		}
 	}
 
 	function logout(){

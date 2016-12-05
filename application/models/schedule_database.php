@@ -2,28 +2,43 @@
 
 class Schedule_database extends CI_Model {
 
-  function selectProfessional(){
+  function selectNickname($idPermission){
 
-    return $this->db
-      ->where('idPermission', '1')
+    $result = $this->db
+      ->select('nickname')
+      ->where('idPermission', $idPermission)
+      ->order_by('nickname', 'asc')
+      ->get('users')
+      ->result();
+    return $result;
+  }
+
+  function newEntry($data){
+    echo 'teste';
+    die();
+
+    $result = $this->db
+      ->select('idUser')
+      ->where('nickname', $data['nickname'])
       ->get('users')
       ->result();
 
+    $newEntry = array(
+      'idUser'     => $result[0]->idUser,
+      'idCreator'  => $this->session->userdata['idUser'],
+      'startDate'  => $data['startDate'],
+      'endDate'  => $data['enddate'],
+    );
 
-    // 
-    // $condition = array('idPermission' => '1');
-    // $this->db->select('nickname');
-    // $this->db->where($condition);
-    // $query = $this->db->get('users');
-    //
-    //     foreach ($query->result() as $row){
-    //     $results[] = array(
-    //       'nickname' => $row->nickname
-    //
-    //     );
-    //
-    //   }
-    //       return $results;
-
+    echo $newEntry;
+    print_r ($newEntry);
+    die();
+    $result = $this->db
+      ->select('nickname')
+      ->where('idPermission', $idPermission)
+      ->order_by('nickname', 'asc')
+      ->get('users')
+      ->result();
+    return $result;
   }
 }

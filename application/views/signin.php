@@ -1,4 +1,4 @@
-<!--<?php  
+<!--<?php
 //session_start();
 
 //include "functions.php";
@@ -10,7 +10,7 @@
 
   //header ("Location:inicio.php");
 
-  //exit(); 
+  //exit();
 //}
 
 //$message = $_GET['message'];
@@ -42,7 +42,7 @@
           'required' => 'required',
           'placeholder'=>'Senha',
           'naxlenth' => '50'
-        )); 
+        ));
         //echo '<br>';
         echo form_submit(array(
           'class' => 'btn btn-lg btn-primary btn-block',
@@ -51,7 +51,7 @@
         echo '<br>';
         echo anchor('', 'Esqueceu sua senha?',  array(
           'onClick' => "javascript:window.open('gerar_nova_senha.php', 'popup');return false"
-        )); 
+        ));
 
         if ($error == 1) {
           echo '<br>';
@@ -62,20 +62,11 @@
           echo '<i class="fa fa-exclamation-circle"></i> Login ou Senha Inválidos   </div>';
           echo '</div>';
         }
-        
+
         echo form_close();
-      
-   
+
+
 
       ?>
-  
+
 </div>
-
-
-
-
-
-
-
-
-

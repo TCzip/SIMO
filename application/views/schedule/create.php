@@ -1,6 +1,6 @@
 <div class="container"><!-- Conteúdo -->
 	<div class="starter-template">
-    <form class="" action="" method="post">
+    <?php echo form_open(); ?>
 			<div class="form-group row">
 				<div class="col-xs-4">
 					<label class="col-form-label" for="jobSelect">Serviço</label>
@@ -14,24 +14,22 @@
 			<div class="form-group row">
 				<div class="col-xs-2">
 					<label class="col-form-label" for="startDate">Data Inicial</label>
-					<input class="form-control"  name="date" id="startDate" type="date">
+					<input class="form-control"  name="startDate" type="date">
 				</div>
 				<div class="col-xs-2">
 					<label class="col-form-label" for="endDate">Data Final</label>
-					<input class="form-control"  name="date" id="endDate" type="date">
+					<input class="form-control"  name="endDate" type="date">
 				</div>
 			</div>
 			<div class="form-group row">
 				<div class="col-xs-4">
 					<label class="col-form-label" for="professionalNameSelection">Nome do Policial</label>
-					<select class="form-control col-xs-3" id="professionalNameSelection">
+					<select class="form-control col-xs-3" name="professionalNameSelection">
 						<option value="Selecione">Selecione o Policial...</option>
 						<?php
-//arrumar array
-						  echo '<option value="'.$results[$i].'">'.$results[$i].'</option>';
-
-
-
+							foreach ($nickname as $value) {
+								echo '<option value="'.$value->nickname.'">'.$value->nickname.'</option>';
+							}
 						?>
 					</select>
 				</div>
