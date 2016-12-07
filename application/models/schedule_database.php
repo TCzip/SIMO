@@ -14,8 +14,6 @@ class Schedule_database extends CI_Model {
   }
 
   function newEntry($data){
-    echo 'teste';
-    die();
 
     $result = $this->db
       ->select('idUser')
@@ -30,9 +28,6 @@ class Schedule_database extends CI_Model {
       'endDate'  => $data['enddate'],
     );
 
-    echo $newEntry;
-    print_r ($newEntry);
-    die();
     $result = $this->db
       ->select('nickname')
       ->where('idPermission', $idPermission)

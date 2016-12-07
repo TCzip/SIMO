@@ -17,7 +17,7 @@
             }
             if ($idPermission == 2){
         		echo '
-            <a href="#"  class="list-group-item"><i class="fa fa-calendar fa-2x pull-left"></i>
+            <a href="create"  class="list-group-item"><i class="fa fa-calendar fa-2x pull-left"></i>
 
 	            <h4 class="list-group-item-heading">Criação de Escalas </h4>
 	            <p class="list-group-item-text">Criação de escala do 0800 </p>

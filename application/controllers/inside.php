@@ -48,10 +48,9 @@ class Inside extends CI_Controller {
 		$data['message'] = $this->input->get('message');
 		$data['menu'] = '0';
 		$data['error'] = $this->input->get('error');
+		$data['body'] = 'settings';
 
-  	$this->load->view('headerint', $data);
-		$this->load->view('settings');
-		$this->load->view('footer');
+  	$this->load->view('inside', $data);
     }
 
 
@@ -162,6 +161,47 @@ class Inside extends CI_Controller {
 		}
 	}
 
+	function signin(){
+
+		$this->form_validation->set_rules('username', 'Username', 'trim');
+		$this->form_validation->set_rules('password', 'Password', 'trim');
+
+		$this->load->model('login_database');
+		$data = array(
+			'username' => $this->input->post('username'),
+			'password' => $this->input->post('password')
+			);
+
+		if ($this->form_validation->run() == FALSE) {
+			if(isset($this->session->userdata['logged'])){
+				redirect('home');
+			}else{
+				$data['title'] = 'SIMO - Entrar';
+				$data['activemenu'] = '2';
+				$data['error'] = '0';
+				$data['body'] = 'signin';
+				$this->load->view('outside',$data);
+			}
+		}else{
+			$result = $this->login_database->authenticate($data);
+			if ($result){
+				$first_time_check = $this->login_database->first_time_check($data);
+				if($first_time_check) {
+					$last_login_update = $this->login_database->last_login_update($data);
+					redirect('home?x=y');
+				}else{
+					redirect('home');
+				}
+			}else{
+				$data['title'] = 'SIMO - Entrar';
+				$data['activemenu'] = '2';
+				$data['error'] = '1';
+				$data['body'] = 'signin';
+				$this->load->view('outside',$data);
+			}
+		}
+	}
+
 	function schedule_create(){
 
 		$data['title'] = 'SIMO - Criar Escala';
@@ -170,13 +210,20 @@ class Inside extends CI_Controller {
 		$data['message'] = null;
 		$data['body'] = 'schedule/create';
 		$this->load->model('Schedule_database');
+
 		$post = $this->input->post();
-		if ($this->form_validation->run() != TRUE) {
+		$this->form_validation->set_rules('jobSelect', 'jobSelect', 'trim|required');
+		$this->form_validation->set_rules('startDate', 'startDate', 'trim');//aqui não aceita required
+		$this->form_validation->set_rules('endDate', 'endDate', 'trim');//aqui tbm não, isto não deixava o form validation funcionar.
+		$this->form_validation->set_rules('nicknameSelection', 'nicknameSelection', 'trim|required');
+
+		if ($this->form_validation->run() == FALSE){
 			$data['nickname'] = $this->Schedule_database->selectNickname('1');
-			echo($this->form_validation->run());
 			$this->load->view('inside', $data);
 		}else {
 			$result = $this->Schedule_database->newEntry($post);
+			$data['message'] = 'Cadastrado!';
+			$this->load->view('inside', $data);
 		}
 	}
 

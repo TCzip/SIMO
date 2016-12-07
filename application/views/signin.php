@@ -1,25 +1,4 @@
-<!--<?php
-//session_start();
-
-//include "functions.php";
-//include "config.php";
-
-
-
-//if(isset($_SESSION['id_user'])){
-
-  //header ("Location:inicio.php");
-
-  //exit();
-//}
-
-//$message = $_GET['message'];
-//$month = $_GET['month'];
-//$year = $_GET['year'];
-
-?>-->
 <div class="container"><!-- Conteúdo -->
-  <?php if(!$this->session->userdata("usuario_logado")) ; ?>
     <h2 style="text-align:center">CICCR</h2>
       <?php
         $atrib = array('style'=>'text-align:center','class'=>'form-signin');
@@ -64,9 +43,5 @@
         }
 
         echo form_close();
-
-
-
       ?>
-
 </div>

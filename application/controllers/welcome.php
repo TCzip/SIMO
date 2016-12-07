@@ -25,7 +25,7 @@ class Welcome extends CI_Controller{
     $this->form_validation->set_rules('username', 'Username', 'trim');
     $this->form_validation->set_rules('password', 'Password', 'trim');
 
-    $this->load->model('login_database','usuarios');
+    $this->load->model('login_database');
     $data = array(
       'username' => $this->input->post('username'),
       'password' => $this->input->post('password')
