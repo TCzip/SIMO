@@ -2,7 +2,9 @@
 <html lang="pt-br">
 <head>
   <!-- Meta Tags -->
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
@@ -77,15 +79,21 @@
 
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top:0px;">
                 <!-- <img src="" style="height:18px;width:18px;margin-top:-2px;" class="img-circle"> -->
-                <i class="fa fa-user"></i><?php echo "  ". $fullname;?> <b class="caret"></b>
+                <i class="fa fa-user"></i><?php echo "  ". $sessionfullname;?> <b class="caret"></b>
             </a>
 
               <ul class="dropdown-menu">
+                <?php if ($this->session->userdata['idPermission'] == 2) {?>
                 <li >
-                  <a href="<?php echo base_url('settings?tab=1&error=0'); ?>">
-                    <i class="fa fa-edit fa-fw"></i> Perfil                  </a>
+                  <a href="<?php echo base_url('user_settings'); ?>">
+                    <i class="fa fa fa-users fa-fw"></i> Usuários                 </a>
                 </li>
+                <?php } ?>
 
+                <li >
+                  <a href="<?php echo base_url('change_password'); ?>">
+                    <i class="fa fa-unlock-alt fa-fw"></i> Alterar Senha                  </a>
+                </li>
                 <li >
                   <a href="<?php echo base_url('logout'); ?>">
                     <i class="fa fa-power-off fa-fw"></i> Sair                  </a>
@@ -98,7 +106,7 @@
     </div><!--/.navbar -->
     <?php $this->load->view($body); ?>
     <!-- Rodapé -->
-    <div style="margin-bottom:0;">
+    <div class="row"  style="margin-bottom:0;">
       <center>
         <p style="font-size:8pt">&copy; 2016 - CICCR - Centro Integrado de Comando e Controle Regional - Departamento de Tecnologia</p>
       </center>

@@ -14,7 +14,8 @@ Sistema de escalas da equipe e arquivos do departamento pentenciário.
 
 **1st task ->** Tela e lógica de criação de escalas pelo administrador.
 Administrador seleciona frequencia, data inicial/final e pessoa que fará
-a escala.
+a escala.*mudou, agora terá equipes que serão lançadas, e estas terão pessoas.
+uma tabela a mais...
 
 **2nd task ->** Tela e lógica de troca de serviços. Para o usuário e para o
 administrador.

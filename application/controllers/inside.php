@@ -5,34 +5,33 @@ class Inside extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-			$this->load->helper('url');
-      $this->load->helper('form');
-      $this->load->library('form_validation');
-      $this->load->library('session');
-      $this->load->helper('date');
-			$this->load->model('login_database');
-			$this->session->userdata['logged'] = true;//logged false é o certo, ativar depois dos testes
-			if(!$this->login_database->isLogged()){
-				redirect('signin');
-			}
+		$this->load->helper('url');
+    $this->load->helper('form');
+    $this->load->library('form_validation');
+    $this->load->library('session');
+    $this->load->helper('date');
+		$this->load->model('login_database');
+		$this->session->userdata['logged'] = true;//logged false é o certo, ativar depois dos testes
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
 	}
 
 	function home(){
 
-			$data['title'] = 'SIMO - Início';
-			$data['fullname'] = $this->session->userdata['fullname'];
-			$data['menu'] = '1';
-			$data['x'] = $this->input->get('x');
-			$data['message'] = $this->input->get('message');
-			$data['body'] = 'home';
+		$data['title'] = 'SIMO - Início';
+		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+		$data['menu'] = '1';
+		$data['x'] = $this->input->get('x');
+		$data['message'] = $this->input->get('message');
+		$data['body'] = 'home';
 
-			$this->load->view('inside',$data);
-
+		$this->load->view('inside',$data);
 	}
 
 	function schedule(){
 		$data['title'] = 'SIMO - Escalas';
-		$data['fullname'] = $this->session->userdata['fullname'];
+		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '4';
 		$data['idPermission'] = $this->session->userdata['idPermission'];
 		$data['body'] = 'schedule/index';
@@ -40,52 +39,9 @@ class Inside extends CI_Controller {
 		$this->load->view('inside', $data);
 	}
 
-	function settings(){
-
-		$data['title'] = 'SIMO - Configurações';
-		$data['fullname'] = $this->session->userdata['fullname'];
-		$data['tab'] = $this->input->get('tab');
-		$data['message'] = $this->input->get('message');
-		$data['menu'] = '0';
-		$data['error'] = $this->input->get('error');
-		$data['body'] = 'settings';
-
-  	$this->load->view('inside', $data);
-    }
-
-
-
-	function set_password(){
-
-    $curr = $this->input->post('currpassword');
-		$new = $this->input->post('newpassword');
-    $conf = $this->input->post('newpasswordconf');
-
-    if ($new != $conf){
-			redirect('settings?tab=1&message=2');
-		}
-		if ($curr == $new){
-			redirect('settings?tab=1&message=4');
-		}
-		else{
-			$this->load->model('settings_database');
-	    $data = array(
-        'username' => $this->session->userdata['username'],
-        'currpassword' => $this->input->post('currpassword'),
-        'newpassword' => $this->input->post('newpassword'),
-        'newpasswordconf' => $this->input->post('newpasswordconf'),
-      );
-			$result = $this->settings_database->change_password($data);
-			if ($result != false) {
-				redirect('settings?tab=1&message=1');
-			}else{
-				redirect('settings?tab=1&message=3');
-			}
-		}
-	}
 	function new_user(){
 
-  	$this->form_validation->set_rules('fullname', 'fullname', 'trim');
+  	$this->form_validation->set_rules('sessionfullname', 'sessionfullname', 'trim');
   	$this->form_validation->set_rules("email", "email", "valid_email|is_unique[usuarios.email]");
   	$this->form_validation->set_rules('username', 'username', 'trim');
   	$this->form_validation->set_rules('nomedeguerra', 'nomedeguerra', 'trim');
@@ -94,7 +50,7 @@ class Inside extends CI_Controller {
 
 		$nomedeguerra = strtoupper($this->input->post('nomedeguerra'));
     $data = array(
-      'fullname' => $this->input->post('fullname'),
+      'sessionfullname' => $this->input->post('sessionfullname'),
       'email' => $this->input->post('email'),
       'username' => $this->input->post('username'),
       'nomedeguerra' => $nomedeguerra,
@@ -105,7 +61,7 @@ class Inside extends CI_Controller {
 		//email is a valid email?
     $email = $this->settings_database->verifica_email($data);
     if ($email == false) {
-			redirect('settings?tab=2&error=4');
+			redirect('create?error=4');
 		}
     //email already exist?
     $email = $this->settings_database->check_exist_email($data);
@@ -118,17 +74,17 @@ class Inside extends CI_Controller {
 			redirect('settings?tab=2&error=1');
 		}
 		if ($username != false){
-			redirect('settings?tab=2&error=2');
+			redirect('create&error=2');
 		}
 		if ($nomedeguerra != false){
-			redirect('settings?tab=2&error=3');
+			redirect('create&error=3');
 		}
 		//everything right then register
 		$result = $this->settings_database->add_user($data);
     if ($result != false) {
-        redirect('settings?tab=2&error=6');
+        redirect('create&error=6');
     }else {
-        redirect('settings?tab=2&error=5');
+        redirect('create&error=5');
     }
 	}
 
@@ -205,7 +161,7 @@ class Inside extends CI_Controller {
 	function schedule_create(){
 
 		$data['title'] = 'SIMO - Criar Escala';
-		$data['fullname'] = $this->session->userdata['fullname'];
+		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '4';
 		$data['message'] = null;
 		$data['body'] = 'schedule/create';

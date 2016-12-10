@@ -12,11 +12,11 @@ class Login_Database extends CI_Model {
       if ($query->num_rows() == 1) {
         $result = $query->result();
         $session_data = array(
-            'username'     => $result[0]->username,
-            'fullname'     => $result[0]->fullname,
-            'idUser'       => $result[0]->idUser,
-            'idPermission' => $result[0]->idPermission,
-            'logged'       => true
+            'username'        => $result[0]->username,
+            'sessionfullname' => $result[0]->fullname,
+            'idUser'          => $result[0]->idUser,
+            'idPermission'    => $result[0]->idPermission,
+            'logged'          => true
             );
         $this->load->library('session');
         $this->session->set_userdata($session_data);

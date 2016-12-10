@@ -2,13 +2,15 @@
 <html lang="pt-br">
 <head>
   <!-- Meta Tags -->
-  <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
 -->
-  <title><?php echo $title ?></title>
+  <title><?= $title ?></title>
 
   <!-- Favicon e App Icon-->
   <link rel="shortcut icon" href="<?php echo base_url('assets/img/favicon.ico') ?>">
@@ -56,7 +58,7 @@
           </li>
 
           <li class="<?php if ($activemenu == 2) echo 'active' ?>">
-            <a href="<?php echo base_url('signin'); ?>">
+            <a href="<?= base_url('signin'); ?>">
             <i class="fa fa-sign-in"></i> Entrar</a>
           </li>
         </ul> <!-- /.nav navbar-nav -->
