@@ -37,9 +37,14 @@
 						echo '<td>Usuário</td>';
 					}
 					$idUser = $cadastro[$ind]->idUser;
-					echo '<td><i class="fa fa-pencil-square-o " aria-hidden="true"></i>'.anchor("register/edit/$idUser", " Editar") .
-					'	| <i class="fa fa-trash-o" aria-hidden="true"></i><a href="#" class="confirma_exclusao" data-id="' .$cadastro[$ind]->idUser .'" data-fullname="' . $cadastro[$ind]->fullname . '" /> Excluir</a></td>';
+					echo '<td><a href="settings/edit/'.$idUser.'" class="btn btn-default fa fa-pencil-square-o" title="Editar" aria-hidden="true"> </a>
+						| <a href="#" title="Deletar" class="btn btn-danger fa fa-trash-o confirma_exclusao" data-id="'
+					.$cadastro[$ind]->idUser .'" data-fullname="' . $cadastro[$ind]->fullname . '" /> </a></td>';
 					echo '</tr>';
+
+
+
+
 					$ind = $ind + 1;
 				}
 				?>
@@ -90,7 +95,7 @@
 
 			$('#btn_excluir').click(function(){
 				var id = $('#modal_confirmation').data('id');
-				document.location.href = base_url + "register/delete/"+id;
+				document.location.href = base_url + "settings/delete/"+id;
 			});
 		});
 </script>

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class register extends CI_Controller {
+class settings extends CI_Controller {
 
 
 	function __construct(){
@@ -26,7 +26,7 @@ class register extends CI_Controller {
 		$this->load->view('inside', $data);
 	}
 
-	public function create(){
+	function create(){
 
 		$this->form_validation->set_rules('fullname', 'fullname', 'trim');
   	$this->form_validation->set_rules("email", "email", "valid_email");
@@ -105,10 +105,10 @@ class register extends CI_Controller {
 			$this->load->view('inside',$data);
 		}else{
 			if ($new != $conf){
-				redirect('register/change_password?message=2');
+				redirect('settings/change_password?message=2');
 			}
 			if ($curr == $new){
-				redirect('register/change_password?message=4');
+				redirect('settings/change_password?message=4');
 			}
 			else{
 				$this->load->model('settings_database');
@@ -120,9 +120,9 @@ class register extends CI_Controller {
 	      );
 				$result = $this->settings_database->change_password($data);
 				if ($result != false) {
-					redirect('register/change_password?message=1');
+					redirect('settings/change_password?message=1');
 				}else{
-					redirect('register/change_password?message=3');
+					redirect('settings/change_password?message=3');
 				}
 			}
 		}
@@ -168,13 +168,13 @@ class register extends CI_Controller {
 			    $email = $this->settings_database->verifica_email($data);
 			    if ($email == false) {
 						// $this->load->view('inside', $data);
-						redirect('register/edit?error=4');
+						redirect('settings/edit?error=4');
 					}
 					//everything right then update
 					$result = $this->settings_database->update_user($data['idUser'],$porra);
 			    if ($result != false) {
 			        // $this->load->view('inside', $data);
-							redirect('register/edit/'.$data['idUser'].'?error=6');
+							redirect('settings/edit/'.$data['idUser'].'?error=6');
 			    }else {
 			        $this->load->view('inside', $data);
 			  	}

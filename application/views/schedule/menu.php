@@ -18,11 +18,13 @@
             if ($idPermission == 2){
         		echo '
             <a href="create"  class="list-group-item"><i class="fa fa-calendar fa-2x pull-left"></i>
-
 	            <h4 class="list-group-item-heading">Criação de Escalas </h4>
 	            <p class="list-group-item-text">Criação de escala do 0800 </p>
-
           	</a>
+            <a href="create"  class="list-group-item"><i class="fa fa-pencil-square-o fa-2x pull-left"></i>
+            <h4 class="list-group-item-heading">Configuração de Equipes </h4>
+            <p class="list-group-item-text">Configuração de equipes do 0800 </p>
+            </a>
             <a href="#"  class="list-group-item"><i class="fa fa-retweet fa-2x pull-left"></i>
 	            <h4 class="list-group-item-heading">Troca de serviços Extraordinários </h4>
 	            <p class="list-group-item-text">Troca de serviços pelo administrador </p>

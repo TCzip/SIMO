@@ -60,10 +60,10 @@ $route['signin'] = 'Welcome/signin';
 //inside system
 $route['home'] = 'Inside/home';
 $route['schedule'] = 'Inside/schedule';
-$route['create'] = 'register/create';
-// $route['edit'] = 'register/edit';
-$route['change_password'] = 'Register/change_password';
-$route['user_settings'] = 'Register/user_settings';
+$route['create'] = 'schedule/create';
+// $route['edit'] = 'settings/edit';
+$route['change_password'] = 'settings/change_password';
+$route['user_settings'] = 'settings/user_settings';
 
 
 //actions
