@@ -26,7 +26,7 @@ class settings extends CI_Controller {
 		$this->load->view('inside', $data);
 	}
 
-	function create(){
+	function user_create(){
 
 		$this->form_validation->set_rules('fullname', 'fullname', 'trim');
   	$this->form_validation->set_rules("email", "email", "valid_email");
@@ -58,7 +58,7 @@ class settings extends CI_Controller {
 			//email is a valid email?
 	    $email = $this->settings_database->verifica_email($data);
 	    if ($email == false) {
-				redirect('create?error=4');
+				redirect('user_create?error=4');
 			}
 	    //email already exist?
 	    $email = $this->settings_database->check_exist_email($data);
@@ -68,20 +68,20 @@ class settings extends CI_Controller {
 	    $nickname = $this->settings_database->check_exist_nickname($data);
 
 			if ($email != false) {
-				redirect('create?error=1');
+				redirect('user_create?error=1');
 			}
 			if ($username != false){
-				redirect('create?error=2');
+				redirect('user_create?error=2');
 			}
 			if ($nickname != false){
-				redirect('create?error=3');
+				redirect('user_create?error=3');
 			}
 			//everything right then register
 			$result = $this->settings_database->add_user($data);
 	    if ($result != false) {
-	        redirect('create?error=6');
+	        redirect('user_create?error=6');
 	    }else {
-	        redirect('create?error=5');
+	        redirect('user_create?error=5');
 	  	}
 		}
 	}
@@ -128,7 +128,7 @@ class settings extends CI_Controller {
 		}
 	}
 
-	function edit($id = null){
+	function user_edit($id = null){
 
 		if ($id){
 			$cadastros = $this->settings_database->get($id);
@@ -185,7 +185,7 @@ class settings extends CI_Controller {
 		}
 	}
 
-	function delete($id = null) {
+	function user_delete($id = null) {
 		if ($this->settings_database->delete($id)) {
 
 			redirect('user_settings');

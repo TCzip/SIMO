@@ -19,7 +19,7 @@ class Schedule extends CI_Controller {
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
     $data['message'] = null;
-    $data['body'] = 'schedule/create';
+    $data['body'] = 'schedule/schedule_create';
     $this->load->model('Schedule_database');
 
     $post = $this->input->post();

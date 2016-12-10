@@ -67,7 +67,7 @@
   </div><!--/.navbar -->
   <?php $this->load->view($body); ?>
   <!-- Rodapé -->
-  <div style="margin-bottom:0;">
+  <div style="margin-bottom:0; width:100%;">
     <center>
       <p style="font-size:8pt">© 2016 - CICCR Centro Integrado de Comando e Controle Departamento de Tecnologia</p>
     </center>

@@ -34,7 +34,7 @@ class Inside extends CI_Controller {
 		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '4';
 		$data['idPermission'] = $this->session->userdata['idPermission'];
-		$data['body'] = 'schedule/menu';
+		$data['body'] = 'schedule/schedule_menu';
 
 		$this->load->view('inside', $data);
 	}

@@ -37,14 +37,10 @@
 						echo '<td>Usuário</td>';
 					}
 					$idUser = $cadastro[$ind]->idUser;
-					echo '<td><a href="settings/edit/'.$idUser.'" class="btn btn-default fa fa-pencil-square-o" title="Editar" aria-hidden="true"> </a>
+					echo '<td><a href="settings/user_edit/'.$idUser.'" class="btn btn-default fa fa-pencil-square-o" title="Editar" aria-hidden="true"> </a>
 						| <a href="#" title="Deletar" class="btn btn-danger fa fa-trash-o confirma_exclusao" data-id="'
 					.$cadastro[$ind]->idUser .'" data-fullname="' . $cadastro[$ind]->fullname . '" /> </a></td>';
 					echo '</tr>';
-
-
-
-
 					$ind = $ind + 1;
 				}
 				?>
@@ -95,7 +91,7 @@
 
 			$('#btn_excluir').click(function(){
 				var id = $('#modal_confirmation').data('id');
-				document.location.href = base_url + "settings/delete/"+id;
+				document.location.href = base_url + "settings/user_delete/"+id;
 			});
 		});
 </script>

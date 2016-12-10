@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 -->
-  <title><?php echo $title ?></title>
+  <title><?= $title ?></title>
 
   <!-- Favicon e App Icon-->
   <link rel="shortcut icon" href="<?php echo base_url('assets/img/favicon.ico') ?>">
@@ -106,7 +106,7 @@
     </div><!--/.navbar -->
     <?php $this->load->view($body); ?>
     <!-- Rodapé -->
-    <div class="row"  style="margin-bottom:0;">
+    <div class="row"  style="margin-bottom:0; width:100%;">
       <center>
         <p style="font-size:8pt">&copy; 2016 - CICCR - Centro Integrado de Comando e Controle Regional - Departamento de Tecnologia</p>
       </center>
