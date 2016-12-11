@@ -1,7 +1,7 @@
 	<br>
 	<div class="col-md-11">
 		<div class="row">
-			<?= anchor('create', 'Novo Cadastro', array('class' => 'btn btn-primary')); ?>
+			<?= anchor('user_create', 'Novo Cadastro', array('class' => 'btn btn-primary')); ?>
 		</div>
 		<div class="row">
 			<h3><?php echo $cadastros->num_rows(); echo ' registro(s)</h3>';

@@ -62,6 +62,7 @@ $route['home'] = 'Inside/home';
 $route['schedule'] = 'Inside/schedule';
 $route['user_create'] = 'settings/user_create';
 $route['schedule_create'] = 'schedule/create';
+$route['schedule_groups'] = 'schedule/groups';
 $route['change_password'] = 'settings/change_password';
 $route['user_settings'] = 'settings/user_settings';
 

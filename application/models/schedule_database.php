@@ -36,4 +36,16 @@ class Schedule_database extends CI_Model {
       ->result();
     return $result;
   }
+
+  function includeUser($id, $idGroup){
+    ->set('idGroup', $idGroup)
+    ->where('idUser', $id)
+    ->update('users');
+  }
+
+  function removeUser($id){
+    ->set('idGroup', null)
+    ->where('idUser', $id)
+    ->update('users');
+  }
 }

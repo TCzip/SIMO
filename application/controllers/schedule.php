@@ -17,7 +17,7 @@ class Schedule extends CI_Controller {
 
     $data['title'] = 'SIMO - Criar Escala';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
-    $data['menu'] = '4';
+    $data['menu'] = '0';
     $data['message'] = null;
     $data['body'] = 'schedule/schedule_create';
     $this->load->model('Schedule_database');
@@ -35,6 +35,24 @@ class Schedule extends CI_Controller {
       $result = $this->Schedule_database->newEntry($post);
       $data['message'] = 'Cadastrado!';
       $this->load->view('inside', $data);
+    }
+  }
+
+  function groups(){
+    $data['title'] = 'SIMO - Configurar Equipes';
+    $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+    $data['menu'] = '0';
+    $data['message'] = null;
+    $data['body'] = 'schedule/schedule_groups';
+    $this->load->model('settings_database');
+    $data['cadastros'] = $this->settings_database->get();
+    $this->load->view('inside', $data);
+  }
+
+  function user_remove($id = null) {
+    if ($this->settings_database->delete($id)) {
+
+      redirect('user_settings');
     }
   }
 

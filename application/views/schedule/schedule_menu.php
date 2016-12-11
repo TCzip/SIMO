@@ -21,7 +21,7 @@
 	            <h4 class="list-group-item-heading">Criação de Escalas </h4>
 	            <p class="list-group-item-text">Criação de escala do 0800 </p>
           	</a>
-            <a href="#"  class="list-group-item"><i class="fa fa-pencil-square-o fa-2x pull-left"></i>
+            <a href="schedule_groups"  class="list-group-item"><i class="fa fa-pencil-square-o fa-2x pull-left"></i>
             <h4 class="list-group-item-heading">Configuração de Equipes </h4>
             <p class="list-group-item-text">Configuração de equipes do 0800 </p>
             </a>
