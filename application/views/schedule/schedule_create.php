@@ -1,6 +1,6 @@
 <div class="container"><!-- ConteÃºdo -->
-	<!-- <form class="" method="post"> -->
-	<?php form_open(); ?>
+	<form class="" method="post">
+
 		<!-- <div class="form-group row">
 			<div class="col-xs-4">
 				<label class="col-form-label" for="jobSelect">Serviço</label>
@@ -40,6 +40,7 @@
 				</select>
 			</div>
 		</div>
+
 		<div class="form-group row">
 			<div class="col-xs-2">
 				<label class="col-form-label" for="startDate">Data Inicial</label>

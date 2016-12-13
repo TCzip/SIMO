@@ -13,6 +13,14 @@ class Schedule_database extends CI_Model {
   //   return $result;
   // }
 
+  public function checkOldEntries($startDate,$endDate){
+    $result = $this->db
+      ->where("`date` between '". $startDate ."' and '". $endDate."'")
+      // ->where('date <=' ,$endDate)
+      ->get("entries");
+      //  echo $this->db->last_query(); die;
+      return $result;
+  }
   // function newEntry($data){
   //
   //   // $result = $this->db
@@ -43,7 +51,7 @@ class Schedule_database extends CI_Model {
     return $result;
   }
 
-  function getGroupMembers() {
+  function getGroupMembers($idGroup = null) {
 
     $idGroup = $this->input->post("idGroup");
     $result = $this->db
