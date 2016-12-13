@@ -30,6 +30,38 @@
   <!-- CSS Bootstrap especifico login-->
   <link href="<?php echo base_url('assets/css/modelo-login.css') ?>" rel="stylesheet">
   <link href="<?php echo base_url('assets/css/modelo-padrao.css') ?>" rel="stylesheet">
+  <script src="<?= base_url('assets/js/jquery.js') ?>"></script>
+  <script type="text/javascript">
+  var base_url = '<? echo base_url() ?>';
+
+  function getGroupMembers(idGroup){
+
+    $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
+    getUsers();
+  }
+
+  function removeMember(idUser,idGroup){
+
+    $.post(base_url+"schedule/removeMember", {idUser : idUser});
+    $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
+    getUsers();
+  }
+
+  function getUsers(){
+
+    $.post(base_url+"schedule/getUsers",function(data){$('#users').html(data);});
+  }
+
+  function addMember(idUser,idGroup){
+
+    alert(idGroup);
+    $.post(base_url+"schedule/addMember", {idUser : idUser, idGroup : idGroup});
+    $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
+    getUsers();
+
+  }
+
+  </script>
 
 
 

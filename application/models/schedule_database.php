@@ -2,50 +2,82 @@
 
 class Schedule_database extends CI_Model {
 
-  function selectNickname($idPermission){
+  // function selectNickname($idPermission){
+  //
+  //   $result = $this->db
+  //     ->select('nickname')
+  //     ->where('idPermission', $idPermission)
+  //     ->order_by('nickname', 'asc')
+  //     ->get('users')
+  //     ->result();
+  //   return $result;
+  // }
 
-    $result = $this->db
-      ->select('nickname')
-      ->where('idPermission', $idPermission)
-      ->order_by('nickname', 'asc')
-      ->get('users')
-      ->result();
+  // function newEntry($data){
+  //
+  //   // $result = $this->db
+  //   //   ->select('idUser')
+  //   //   ->where('nickname', $data['groupSelection'])
+  //   //   ->get('users')
+  //   //   ->result();
+  //
+  //   // $newEntry = array(
+  //   //   'idUser'     => $result[0]->idUser,
+  //   //   'idCreator'  => $this->session->userdata['idUser'],
+  //   //   'startDate'  => $data['startDate'],
+  //   //   'endDate'  => $data['endDate'],
+  //   // );
+  //   //
+  //   // $result = $this->db
+  //   //   ->select('nickname')
+  //   //   ->where('idPermission', $idPermission)
+  //   //   ->order_by('nickname', 'asc')
+  //   //   ->get('users')
+  //   //   ->result();
+  //   // return $result;
+  // }
+
+  function getGroups() {
+    $this->db->order_by("groupName", "asc");
+    $result = $this->db->get("groups");
     return $result;
   }
 
-  function newEntry($data){
+  function getGroupMembers() {
+
+    $idGroup = $this->input->post("idGroup");
+    $result = $this->db
+      ->where("idGroup", $idGroup)
+      ->order_by("username", "asc")
+      ->get("users");
+      return $result;
+  }
+
+  function getUsers() {
 
     $result = $this->db
-      ->select('idUser')
-      ->where('nickname', $data['nickname'])
-      ->get('users')
-      ->result();
+      ->where("idGroup", null)
+      ->order_by("nickname", "asc")
+      ->get("users");
+      return $result;
+  }
 
-    $newEntry = array(
-      'idUser'     => $result[0]->idUser,
-      'idCreator'  => $this->session->userdata['idUser'],
-      'startDate'  => $data['startDate'],
-      'endDate'  => $data['enddate'],
-    );
-
+  function addMember(){
+    $idUser = $this->input->post("idUser");
+    $idGroup = $this->input->post("idGroup");
     $result = $this->db
-      ->select('nickname')
-      ->where('idPermission', $idPermission)
-      ->order_by('nickname', 'asc')
-      ->get('users')
-      ->result();
+      ->set("idGroup", $idGroup)
+      ->where("idUser", $idUser)
+      ->update("users");
     return $result;
   }
 
-  function includeUser($id, $idGroup){
-    ->set('idGroup', $idGroup)
-    ->where('idUser', $id)
-    ->update('users');
-  }
-
-  function removeUser($id){
-    ->set('idGroup', null)
-    ->where('idUser', $id)
-    ->update('users');
+  function removeMember(){
+    $idUser = $this->input->post("idUser");
+    $result = $this->db
+      ->set("idGroup", null)
+      ->where("idUser", $idUser)
+      ->update("users");
+    return $result;
   }
 }

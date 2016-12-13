@@ -1,6 +1,7 @@
 <div class="container"><!-- ConteÃºdo -->
-	<form class="" method="post">
-		<div class="form-group row">
+	<!-- <form class="" method="post"> -->
+	<?php form_open(); ?>
+		<!-- <div class="form-group row">
 			<div class="col-xs-4">
 				<label class="col-form-label" for="jobSelect">Serviço</label>
 				<select class="form-control col-xs-3" name="jobSelect" placeholder="Selecione o serviço">
@@ -9,15 +10,15 @@
 					<option value="monitoramento">Monitoramento Ocorrências</option>
 				</select>
 			</div>
-		</div>
+		</div> -->
 		<div class="form-group row">
 			<div class="col-xs-4">
-				<label class="col-form-label" for="nicknameSelection">Nome do Policial</label>
-				<select class="form-control col-xs-3" name="nicknameSelection">
-					<option value="Selecione">Selecione o Policial...</option>
+				<label class="col-form-label" for="groupSelection">Equipe</label>
+				<select class="form-control col-xs-3" name="groupSelection" required>
+					<option value="Selecione"></option>
 					<?php
-						foreach ($nickname as $value) {
-							echo '<option value="'.$value->nickname.'">'.$value->nickname.'</option>';
+						foreach ($groups->result() as $option) {
+							echo '<option value="'.$option->idGroup.'">'.$option->groupName.'</option>';
 						}
 					?>
 				</select>
@@ -26,10 +27,10 @@
 		<div class="form-group row">
 			<div class="col-xs-4">
 				<label class="col-form-label" for="scheduleSelection">Escala</label>
-				<select class="form-control col-xs-3" name="nicknameSelection">
-					<option value="Selecione">Selecione a Escala...</option>
-					<option value="Selecione">Escala comum 0800</option>
-					<option value="Selecione">Escala de final de ano</option>
+				<select class="form-control col-xs-3" name="scheduleSelection">
+					<option value="0" selected="selected">Seleccione a Escala...</option>
+					<option value="1">Escala comum 0800</option>
+					<!-- <option value="Selecione">Escala de final de ano</option> -->
 					<!-- <?php
 					//será implementado posteriormente as escalas dinâmicas
 					//	foreach ($nickname as $value) {
@@ -66,6 +67,15 @@
 				<input class="btn btn-sm btn-primary"type="submit" name="submit" value="CADASTRAR">
 			</div>
 		</div>
+		<?php if ($message == true) {
+
+		echo '<div id="mensagem">';
+		echo '<div class="alert alert-success">';
+		echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
+		echo '<i class="fa fa-exclamation-circle"></i> Cadastrado! </div>';
+		echo '</div>';
+		}
+		?>
 		</center>
 	</form>
 </div>
