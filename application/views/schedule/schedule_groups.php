@@ -1,37 +1,29 @@
-<br>
-<div class="form-group">
-<center>
-<div class="col-md-5">
-  <div class="row">
-    <?= anchor('create', 'Nova Equipe', array('class' => 'btn btn-primary')); ?>
+<div class="content">
+  <div class="form-signin center well">
+    <div class="row">
+      <?= anchor('create', 'Nova Equipe', array('class' => 'btn btn-primary')); ?>
+    </div>
+    <br>
+    <select class="form-control" name="groups" id="groups" onchange='getGroupMembers($(this).val())'>
+    <?php echo $groups; ?>
+    </select>
+    </p>
+    <div class="table-responsive" name="members" id="members">
+    </div>
+    <div class="row">
+      <select class="form-control" name="users" id="users">
+        <option value="0">Escolha o Integrante para adicionar:</option>
+      <?php echo $users_option; ?>
+      </select>
+      <br>
+      <button class="btn btn-primary" type="button" name="button" onclick='addMember($(users).val(),$(groups).val())'>Inserir Membro</button>
+    </div>
   </div>
-
-  <p>
-  Escolha a Equipe:<br />
-  <select class="form-control" name="groups" id="groups" onchange='getGroupMembers($(this).val())'>
-  <?php echo $groups; ?>
-  </select>
-  </p>
-<div class="table-responsive" name="members" id="members">
 </div>
-
-<div class="row">
-Escolha o Integrante para adicionar:<br />
-<select class="form-control" name="users" id="users">
-<?php echo $users_option; ?>
-</select>
-<button class="btn btn-primary" type="button" name="button" onclick='addMember($(users).val(),$(groups).val())'>Inserir Membro</button>
-</div>
-</center>
-</div>
-
-
-
-
 
 
 <script src="<?= base_url('assets/js/jquery.js') ?>"></script>
-<script src="<?= base_url('assets/bootstrap/js/bootstrap.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
 
 <script>
   var base_url = "<?= base_url(); ?>";

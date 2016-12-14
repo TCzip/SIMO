@@ -37,27 +37,27 @@
   function getGroupMembers(idGroup){
 
     $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
+    console.log("ggm");
     getUsers();
-  }
+    }
 
   function removeMember(idUser,idGroup){
-
+console.log("rm");
     $.post(base_url+"schedule/removeMember", {idUser : idUser});
-    $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
-    getUsers();
+    getGroupMembers(idGroup);
+
   }
 
   function getUsers(){
-
+console.log("gu");
     $.post(base_url+"schedule/getUsers",function(data){$('#users').html(data);});
+    die();
   }
 
   function addMember(idUser,idGroup){
-
-    alert(idGroup);
+    console.log("add");
     $.post(base_url+"schedule/addMember", {idUser : idUser, idGroup : idGroup});
-    $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
-    getUsers();
+    getGroupMembers(idGroup);
 
   }
 
