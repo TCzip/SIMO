@@ -55,10 +55,13 @@
 			<center>
 			<div class="col-xs-4">
 				<label class="col-form-label">Escala para Data Inicial</label><br>
-				<input type="checkbox" name="check1" id="check1"> 07:00 - 13:00 <br>
-				<input type="checkbox" name="check2" id="check2"> 13:00 - 18:00 <br>
-				<input type="checkbox" name="check3" id="check3"> 18:00 - 23:00 <br>
-				<input type="checkbox" name="check4" id="check4"> 23:00 - 07:00 <br>
+				<input type="radio" name="idSchedule" value="1"> 07:00 - 13:00 <br>
+				<input type="radio" name="idSchedule" value="2"> 13:00 - 18:00 <br>
+				<input type="radio" name="idSchedule" value="3"> 18:00 - 23:00 <br>
+				<input type="radio" name="idSchedule" value="5"> Folga <br>
+				<input type="radio" name="idSchedule" value="6"> Descanso <br>
+				<input type="radio" name="idSchedule" value="7"> Sobreaviso <br>
+				<!-- <input type="checkbox" name="check4" id="check4" value="4"> 23:00 - 07:00 <br> -->
 			</div>
 		</center>
 		</div>
@@ -68,15 +71,28 @@
 				<input class="btn btn-sm btn-primary"type="submit" name="submit" value="CADASTRAR">
 			</div>
 		</div>
-		<?php if ($message == true) {
+		<div class="form-group row">
+			<div class="col-xs-4">
+		<?php
+		if ($message == 1) {
+
+		echo '<div id="mensagem">';
+		echo '<div class="alert alert-danger">';
+		echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
+		echo '<i class="fa fa-exclamation-circle"></i> Entrada entre datas já existente!</div>';
+		echo '</div>';
+		}
+		if ($message == 2) {
 
 		echo '<div id="mensagem">';
 		echo '<div class="alert alert-success">';
 		echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
-		echo '<i class="fa fa-exclamation-circle"></i> Cadastrado! </div>';
+		echo '<i class="fa fa-exclamation-circle"></i> Entrada efetuada!</div>';
 		echo '</div>';
 		}
 		?>
+			</div>
+		</div>
 		</center>
 	</form>
 </div>

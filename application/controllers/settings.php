@@ -134,7 +134,7 @@ class settings extends CI_Controller {
 			$cadastros = $this->settings_database->get($id);
 			if ($cadastros->num_rows() > 0 ) {
 				$this->form_validation->set_rules('fullname', 'fullname', 'trim');
-		  	$this->form_validation->set_rules("email", "email", "valid_email");
+		  	$this->form_validation->set_rules("email", "email", "valid_email", array('valid_email' => 'Email inválido!.'));
 		  	$this->form_validation->set_rules('username', 'username', 'trim');
 		  	$this->form_validation->set_rules('nickname', 'nickname', 'trim');
 
@@ -150,6 +150,7 @@ class settings extends CI_Controller {
 				$data['email'] = $cadastros->row()->email;
 				$data['nickname'] = $cadastros->row()->nickname;
 				$data['idPermission'] = $cadastros->row()->idPermission;
+
 				if ($this->form_validation->run() == FALSE) {
 
 		 		  $this->load->view('inside', $data);
@@ -157,30 +158,53 @@ class settings extends CI_Controller {
 					$this->load->model('settings_database');
 
 					$nickname = strtoupper($this->input->post('nickname'));
-			    $porra = array(
+			    $update = array(
 			      'fullname' => $this->input->post('fullname'),
 			      'email' => $this->input->post('email'),
 			      'username' => $this->input->post('username'),
 			      'nickname' => $nickname,
 			      'idPermission' => $this->input->post('userlevel'),
 			    );
-					//email is a valid email?
-			    $email = $this->settings_database->verifica_email($data);
-			    if ($email == false) {
-						// $this->load->view('inside', $data);
-						redirect('settings/edit?error=4');
+
+					if ($data['email'] != $update['email']) {
+						//email is a valid email?
+				    $email = $this->settings_database->verifica_email($update);
+				    if ($email == false) {
+							redirect('settings/user_edit/'.$data['idUser'].'?error=4');
+						}
+				    //email already exist?
+				    $email = $this->settings_database->check_exist_email($update);
+						if ($email != false) {
+							redirect('settings/user_edit/'.$data['idUser'].'?error=1');
+						}
 					}
+
+					if ($data['username'] != $update['username']) {
+						//username already exist?
+			    	$username = $this->settings_database->check_exist_username($update);
+						if ($username != false){
+							redirect('settings/user_edit/'.$data['idUser'].'?error=2');
+						}
+					}
+
+					if ($data['nickname'] != $update['nickname']) {
+				    //nickname already exist?
+				    $nickname = $this->settings_database->check_exist_nickname($update);
+						if ($nickname != false){
+							redirect('settings/user_edit/'.$data['idUser'].'?error=3');
+						}
+					}
+
 					//everything right then update
-					$result = $this->settings_database->update_user($data['idUser'],$porra);
+					$result = $this->settings_database->update_user($data['idUser'],$update);
 			    if ($result != false) {
-			        // $this->load->view('inside', $data);
-							redirect('settings/edit/'.$data['idUser'].'?error=6');
+							redirect('settings/user_edit/'.$data['idUser'].'?error=6');
 			    }else {
 			        $this->load->view('inside', $data);
 			  	}
 				}
 			}else{
-				echo 'deu bosta! fala com o fonseca';
+				echo 'Usuário não existente';
 			}
 		}
 	}

@@ -13,7 +13,7 @@ class Schedule extends CI_Controller {
 
     $data['title'] = 'SIMO - Criar Escala';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
-    $data['menu'] = '0';
+    $data['menu'] = '4';
     $data['message'] = null;
     $data['body'] = 'schedule/schedule_create';
 
@@ -24,34 +24,149 @@ class Schedule extends CI_Controller {
     $this->form_validation->set_rules('scheduleSelection', 'Schedule Selection');
     $this->form_validation->set_rules('startDate', 'startDate');//aqui não aceita required
     $this->form_validation->set_rules('endDate', 'endDate');//aqui tbm não, isto não deixava o form validation funcionar.
-
+    $data['groups'] = $this->Schedule_database->getGroups();
     if ($this->form_validation->run() == FALSE){
-      $data['groups'] = $this->Schedule_database->getGroups();
+
       $this->load->view('inside', $data);
     }else {
       //verifiry if between start and end dates already have entries.
-      $startDate = $post = $this->input->post('startDate');
-      $endDate = $post = $this->input->post('endDate');
+      $startDate =  $this->input->post('startDate');
+      $endDate = $this->input->post('endDate');
       $oldentries = $this->Schedule_database->checkOldEntries($startDate,$endDate);
       if ($oldentries->num_rows()) {
-        echo 'existe';
-        print_r($oldentries);
-        die();
         //se existem dados entre a data de insert então envia message
-        $data['message'] = 'Entradas entre dadas já existentes';
+        $data['message'] = '1';
         $this->load->view('inside', $data);
       }else{
-        //executa entrada para cada membro da equipe entre as datas fornecidas
-        $groupMembers = $this->Schedule_database->getGroupMembers($this->input->post('groupSelection')); //select members to new entry
-        foreach ($groupMembers->result() as $groupMember) { //for each member do the entry record
-          echo $groupMember->nickname;
-          // $data['groups'] = $this->Schedule_database->getGroups();
-                // $data['message'] = TRUE;
-          // $this->load->view('inside', $data);
-          // $entrydata =
-          // $newentry = $this->Schedule_database->newEntry();
+        $scheduleDate = $startDate;
+        $idSchedule = $this->input->post('idSchedule');
+        $groupEntry['idGroup'] = $this->input->post('groupSelection');
+        //register entries for all group
+        while ($scheduleDate <= $endDate) {
+          switch ($idSchedule) {
+            case 1:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //new entry for second idchedule, same day
+              $idSchedule = 4;
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 5;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+            case 2:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 1;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+            case 3:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 2;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+            case 5:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 6;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+            case 6:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 7;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+            case 7:
+              $groupEntry['idSchedule'] = $idSchedule;
+              $groupEntry['scheduleDate'] = $scheduleDate;
+              $newGroupEntry = $this->Schedule_database->newGroupEntry($groupEntry);
+              //set next idSchedule
+              $idSchedule = 3;
+              $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+              break;
+          }
         }
-        die();
+
+        //for each member do the entry record
+        $groupMembers = $this->Schedule_database->getGroupMembers($this->input->post('groupSelection')); //select members to new entry
+        $entry['idManager'] = $this->session->userdata['idUser'];
+        foreach ($groupMembers->result() as $groupMember) { //for each member do the entry record
+          $entry['idUser'] = $groupMember->idUser;
+          $scheduleDate = $startDate;
+          $idSchedule = $this->input->post('idSchedule');
+          while ($scheduleDate <= $endDate) {
+            switch ($idSchedule) {
+              case 1:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //new entry for second idchedule, same day
+                $idSchedule = 4;
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 5;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+              case 2:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 1;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+              case 3:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 2;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+              case 5:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 6;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+              case 6:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 7;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+              case 7:
+                $entry['idSchedule'] = $idSchedule;
+                $entry['scheduleDate'] = $scheduleDate;
+                $newEntry = $this->Schedule_database->newEntry($entry);
+                //set next idSchedule
+                $idSchedule = 3;
+                $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+                break;
+            }
+          }
+        }
+        $data['message'] = '2';
+        $this->load->view('inside', $data);
       }
     }
   }
@@ -65,6 +180,72 @@ class Schedule extends CI_Controller {
     return TRUE;
   }
 
+  function newGroup(){
+  $data['title'] = 'SIMO - Nova Equipe';
+  $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+  $data['menu'] = '4';
+  $data['body'] = 'schedule/schedule_newGroup';
+
+  $this->load->view('inside', $data);
+}
+
+function getGroups(){
+  $groups = $this->Schedule_database->getGroups();
+  if ($groups->num_rows() > 0) {
+
+  $option = '<table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nome do Grupo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+        <tbody>';
+
+  foreach($groups->result() as $line) {
+  $option .= '<tr>';
+  $option .= '<td>'.$line->groupName.'</td>';
+  $option .= '<td><a name="botao" id="botao" href="#" title="Remover" onclick="removeMember('.$line->idGroup.','.$line->groupName.')" class="btn btn-danger fa fa-times"> </a></td>';
+  $option .= '</tr>';
+  }
+  echo $option;
+}else
+  echo 'NENHUMA EQUIPE CADASTRADA!';
+}
+
+  function viewByGroups(){
+
+
+    $data['title'] = 'SIMO - Visualizar Escala';
+    $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+    $data['menu'] = '4';
+    $data['body'] = 'schedule/schedule_viewByGroups';
+    $this->load->view('inside', $data);
+    // $year = date("Y");
+
+
+    // echo $year; die();
+    // foreach ($result->result() as $entry) {
+    //   $matriz[[$line][$day]] = $entry->groupName;
+    // }
+  }
+
+  function generateViewByGroupsTable(){
+
+    // $year = $this->input->post('year');
+    // $month = $this->input->post('month');
+    // $result = $this->Schedule_database->getGroupsEntries();//orderby date, idschedule
+    echo 'MERDA';
+    // print_r($result); die();
+    // $firstRow = $result->first_row();
+    // $startDate = $firstRow->scheduleDate;
+
+  }
+
+  function viewByMembers(){
+    $this->Schedule_database->getMembersEntries();
+
+  }
 
   function groups(){
     $data['title'] = 'SIMO - Configurar Equipes';
@@ -76,7 +257,7 @@ class Schedule extends CI_Controller {
     $groups = $this->Schedule_database->getGroups();
 
     $option = "<option value='0'>Escolha a Equipe...</option>";
-    foreach($groups->result() as $line) {
+    foreach($groups->result() as $line){
     $option .= "<option value='$line->idGroup'>$line->groupName</option>";
     }
 

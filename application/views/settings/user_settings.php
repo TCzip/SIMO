@@ -66,32 +66,3 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
-
-	<script src="<?= base_url('assets/js/jquery.js') ?>"></script>
-	<script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
-	<script>
-		var base_url = "<?= base_url(); ?>";
-
-		$(function(){
-			$('.confirma_exclusao').on('click', function(e) {
-					e.preventDefault();
-
-					var fullname = $(this).data('fullname');
-					var id = $(this).data('id');
-
-					$('#modal_confirmation').data('fullname', fullname);
-					$('#modal_confirmation').data('id', id);
-					$('#modal_confirmation').modal('show');
-			});
-
-			$('#modal_confirmation').on('show.bs.modal', function () {
-				var fullname = $(this).data('fullname');
-				$('#fullname_exclusao').text(fullname);
-			});
-
-			$('#btn_excluir').click(function(){
-				var id = $('#modal_confirmation').data('id');
-				document.location.href = base_url + "settings/user_delete/"+id;
-			});
-		});
-</script>

@@ -13,16 +13,39 @@ class Schedule_database extends CI_Model {
   //   return $result;
   // }
 
-  public function checkOldEntries($startDate,$endDate){
+  function checkOldEntries($startDate,$endDate){
     $result = $this->db
-      ->where("`date` between '". $startDate ."' and '". $endDate."'")
+      ->where("`entryDate` between '". $startDate ."' and '". $endDate."'")
       // ->where('date <=' ,$endDate)
       ->get("entries");
-      //  echo $this->db->last_query(); die;
+      // echo $this->db->last_query(); die;
       return $result;
   }
-  // function newEntry($data){
-  //
+
+  function newGroupEntry($entry){
+    $result = $this->db
+      ->insert('groupentries', $entry);
+    return $result;
+  }
+
+  function getGroupsEntries($year,$month){
+    $result = $this->db
+      ->select('groups.groupName , groupentries.IdGroup, groupentries.idSchedule,groupentries.scheduleDate')
+      ->from('groups')
+      ->where('month(scheduleDate)', $month)
+      ->where('year(scheduleDate)', $year)
+      ->join('groupentries','groups.idGroup = groupentries.IdGroup')
+      ->order_by('groupentries.scheduleDate', 'groupentries.idSchedule')
+      ->get();
+      //  echo $this->db->last_query(); die;
+    return $result;
+  }
+
+  function newEntry($entry){
+    $result = $this->db
+      ->insert('entries', $entry);
+    return $result;
+  }
   //   // $result = $this->db
   //   //   ->select('idUser')
   //   //   ->where('nickname', $data['groupSelection'])
@@ -53,11 +76,16 @@ class Schedule_database extends CI_Model {
 
   function getGroupMembers($idGroup = null) {
 
-    $idGroup = $this->input->post("idGroup");
+    //if it comes form js function then get the value from post
+    if ($idGroup == null) {
+        $idGroup = $this->input->post("idGroup");
+    }
+
     $result = $this->db
       ->where("idGroup", $idGroup)
       ->order_by("username", "asc")
       ->get("users");
+      // echo $this->db->last_query(); die;
       return $result;
   }
 

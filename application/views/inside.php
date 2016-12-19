@@ -30,41 +30,48 @@
   <!-- CSS Bootstrap especifico login-->
   <link href="<?php echo base_url('assets/css/modelo-login.css') ?>" rel="stylesheet">
   <link href="<?php echo base_url('assets/css/modelo-padrao.css') ?>" rel="stylesheet">
-  <script src="<?= base_url('assets/js/jquery.js') ?>"></script>
+  <script src="<?php echo base_url('assets/js/jquery.js') ?>s"></script>
   <script type="text/javascript">
   var base_url = '<? echo base_url() ?>';
 
+  function generateViewByGroupsTable(year,month){
+    alert("Hello! I am an alert box!!");
+    $.post(base_url+"schedule/generateViewByGroupsTable", {year : year, month : month},function(data){$('#teste').html(data);});
+  }
+
+  function addGroup(groupName){
+    $.post(base_url+"schedule/addGroup", {groupName : groupName});
+    getGroups();
+  }
+
+  function getGroups(){
+    $.post(base_url+"schedule/getGroups",function(data){$('#groups').html(data);});
+  }
+  
   function getGroupMembers(idGroup){
 
     $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});
-    console.log("ggm");
     getUsers();
     }
 
   function removeMember(idUser,idGroup){
-console.log("rm");
     $.post(base_url+"schedule/removeMember", {idUser : idUser});
     getGroupMembers(idGroup);
 
   }
 
   function getUsers(){
-console.log("gu");
     $.post(base_url+"schedule/getUsers",function(data){$('#users').html(data);});
-    die();
+    // die();
   }
 
   function addMember(idUser,idGroup){
-    console.log("add");
     $.post(base_url+"schedule/addMember", {idUser : idUser, idGroup : idGroup});
     getGroupMembers(idGroup);
 
   }
 
   </script>
-
-
-
   <!-- Chrome Extention -->
   <!--<link type="text/css" rel="stylesheet" href="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/style.css">-->
   <!--<script type="text/javascript" charset="utf-8" src="chrome-    extension://cpngackimfmofbokmjmljamhdncknpmg/page_context.js"></script>-->
@@ -110,8 +117,7 @@ console.log("gu");
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
 
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top:0px;">
-                <!-- <img src="" style="height:18px;width:18px;margin-top:-2px;" class="img-circle"> -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top:0px;" aria-expanded="true">
                 <i class="fa fa-user"></i><?php echo "  ". $sessionfullname;?> <b class="caret"></b>
             </a>
 
@@ -147,8 +153,36 @@ console.log("gu");
 
     <!-- Arquivos JavaScript  -->
     <script src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
-    <script src="<?= base_url('assets/js/jquery-ui.min.js') ?>"></script>
+    <script src="<?php echo base_url('assets/js/jquery-ui.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
+
+
+    <script>
+      var base_url = "<?= base_url(); ?>";
+
+      $(function(){
+        $('.confirma_exclusao').on('click', function(e) {
+            e.preventDefault();
+
+            var fullname = $(this).data('fullname');
+            var id = $(this).data('id');
+
+            $('#modal_confirmation').data('fullname', fullname);
+            $('#modal_confirmation').data('id', id);
+            $('#modal_confirmation').modal('show');
+        });
+
+        $('#modal_confirmation').on('show.bs.modal', function () {
+          var fullname = $(this).data('fullname');
+          $('#fullname_exclusao').text(fullname);
+        });
+
+        $('#btn_excluir').click(function(){
+          var id = $('#modal_confirmation').data('id');
+          document.location.href = base_url + "settings/user_delete/"+id;
+        });
+      });
+  </script>
 
   </body>
   </html>

@@ -8,8 +8,10 @@
       <span class="erro"><?php echo form_error('email') ?  : ''; ?></span>
 			<input type="text" class="form-control" name="email" value="<?= set_value('email') ? : (isset($email) ? $email : '') ?>" placeholder="Email" id="email" required>
 			<br/>
+      <span class="erro"><?php echo form_error('username') ?  : ''; ?></span>
 			<input type="text" class="form-control" name="username" value="<?= set_value('username') ? : (isset($username) ? $username : '') ?>" placeholder="Nome de Usu&aacute;rio" id="username" required>
 			<br/>
+      <span class="erro"><?php echo form_error('nickname') ?  : ''; ?></span>
 			<input type="text" class="form-control" name="nickname" value="<?= set_value('nickname') ? : (isset($nickname) ? $nickname : '') ?>" placeholder="Nome de Guerra" id="nickname" required>
 			<br/>
 			<input type="radio" name="userlevel" value="2" <?php if ($idPermission == 2){echo 'checked';} ?> required=""> Administrador
@@ -53,13 +55,13 @@
           echo '<i class="fa fa-exclamation-circle"></i> Email inválido! </div>';
           echo '</div>';
     	}
-    	if ($error==5) {
-          echo '<div id="mensagem">';
-          echo '<div class="alert alert-danger">';
-          echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
-          echo '<i class="fa fa-exclamation-circle"></i> Contacte o ADM! </div>';
-          echo '</div>';
-    	}
+    	// if ($error==5) {
+      //     echo '<div id="mensagem">';
+      //     echo '<div class="alert alert-danger">';
+      //     echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
+      //     echo '<i class="fa fa-exclamation-circle"></i> Contacte o ADM! </div>';
+      //     echo '</div>';
+    	// }
     	if ($error==6) {
           echo '<div id="mensagem">';
           echo '<div class="alert alert-success">';
@@ -71,4 +73,3 @@
 		</form>
 	</div>
 </div>
-<br>
