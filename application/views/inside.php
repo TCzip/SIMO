@@ -30,13 +30,20 @@
   <!-- CSS Bootstrap especifico login-->
   <link href="<?php echo base_url('assets/css/modelo-login.css') ?>" rel="stylesheet">
   <link href="<?php echo base_url('assets/css/modelo-padrao.css') ?>" rel="stylesheet">
-  <script src="<?php echo base_url('assets/js/jquery.js') ?>s"></script>
+  <script src="<?php echo base_url('assets/js/jquery.js') ?>"></script>
   <script type="text/javascript">
   var base_url = '<? echo base_url() ?>';
 
+  function cont(){
+    //  var conteudo = document.getElementById('schedule').innerHTML;
+    //  tela_impressao = window.open('about:blank');
+    //  tela_impressao.document.write(table-responsive);
+     window.print();
+    //  tela_impressao.window.close();
+  }
+
   function generateViewByGroupsTable(year,month){
-    alert("Hello! I am an alert box!!");
-    $.post(base_url+"schedule/generateViewByGroupsTable", {year : year, month : month},function(data){$('#teste').html(data);});
+    $.post(base_url+"schedule/generateViewByGroupsTable", {year : year, month : month},function(data){$('#schedule').html(data);});
   }
 
   function addGroup(groupName){
@@ -47,7 +54,7 @@
   function getGroups(){
     $.post(base_url+"schedule/getGroups",function(data){$('#groups').html(data);});
   }
-  
+
   function getGroupMembers(idGroup){
 
     $.post(base_url+"schedule/getGroupMembers", {idGroup : idGroup},function(data){$('#members').html(data);});

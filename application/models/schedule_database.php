@@ -30,7 +30,7 @@ class Schedule_database extends CI_Model {
 
   function getGroupsEntries($year,$month){
     $result = $this->db
-      ->select('groups.groupName , groupentries.IdGroup, groupentries.idSchedule,groupentries.scheduleDate')
+      ->select('groups.groupName , groupentries.IdGroup, groupentries.idSchedule, groupentries.scheduleDate')
       ->from('groups')
       ->where('month(scheduleDate)', $month)
       ->where('year(scheduleDate)', $year)
