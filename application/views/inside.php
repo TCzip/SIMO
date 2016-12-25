@@ -34,16 +34,12 @@
   <script type="text/javascript">
   var base_url = '<? echo base_url() ?>';
 
-  function cont(){
-    //  var conteudo = document.getElementById('schedule').innerHTML;
-    //  tela_impressao = window.open('about:blank');
-    //  tela_impressao.document.write(table-responsive);
-     window.print();
-    //  tela_impressao.window.close();
-  }
-
   function generateViewByGroupsTable(year,month){
     $.post(base_url+"schedule/generateViewByGroupsTable", {year : year, month : month},function(data){$('#schedule').html(data);});
+  }
+
+  function generateViewByMembersTable(year,month){
+    $.post(base_url+"schedule/generateViewByMembersTable", {year : year, month : month},function(data){$('#schedule').html(data);});
   }
 
   function addGroup(groupName){
@@ -53,6 +49,12 @@
 
   function getGroups(){
     $.post(base_url+"schedule/getGroups",function(data){$('#groups').html(data);});
+  }
+
+  function deleteGroup(idGroup){
+    $.post(base_url+"schedule/deleteGroup", {idGroup : idGroup});
+    getGroups();
+    // alert(idGroup);
   }
 
   function getGroupMembers(idGroup){
@@ -65,6 +67,7 @@
     $.post(base_url+"schedule/removeMember", {idUser : idUser});
     getGroupMembers(idGroup);
 
+
   }
 
   function getUsers(){
@@ -73,8 +76,12 @@
   }
 
   function addMember(idUser,idGroup){
-    $.post(base_url+"schedule/addMember", {idUser : idUser, idGroup : idGroup});
-    getGroupMembers(idGroup);
+    if (idGroup > 0){
+      $.post(base_url+"schedule/addMember", {idUser : idUser, idGroup : idGroup});
+      getGroupMembers(idGroup);
+    }else{
+      alert("Escolha uma equipe!");
+    }
 
   }
 
@@ -151,6 +158,7 @@
       </div><!--/.navbar-header -->
     </div><!--/.navbar -->
     <?php $this->load->view($body); ?>
+    <br>
     <!-- Rodapé -->
     <div class="row"  style="margin-bottom:0; width:100%;">
       <center>
@@ -189,7 +197,8 @@
           document.location.href = base_url + "settings/user_delete/"+id;
         });
       });
-  </script>
+
+</script>
 
   </body>
   </html>

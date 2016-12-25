@@ -17,7 +17,7 @@ class Schedule_database extends CI_Model {
     $result = $this->db
       ->where("`entryDate` between '". $startDate ."' and '". $endDate."'")
       // ->where('date <=' ,$endDate)
-      ->get("entries");
+      ->get("memberentries");
       // echo $this->db->last_query(); die;
       return $result;
   }
@@ -30,7 +30,7 @@ class Schedule_database extends CI_Model {
 
   function getGroupsEntries($year,$month){
     $result = $this->db
-      ->select('groups.groupName , groupentries.IdGroup, groupentries.idSchedule, groupentries.scheduleDate')
+      ->select('groups.groupName, groupentries.IdGroup, groupentries.idSchedule, groupentries.scheduleDate')
       ->from('groups')
       ->where('month(scheduleDate)', $month)
       ->where('year(scheduleDate)', $year)
@@ -41,9 +41,23 @@ class Schedule_database extends CI_Model {
     return $result;
   }
 
+  function getMembersEntries($year,$month){
+    $result = $this->db
+      ->select('users.username, users.idUser, memberentries.idSchedule, memberentries.scheduleDate')
+      ->from('memberentries')
+      ->where('month(scheduleDate)', $month)
+      ->where('year(scheduleDate)', $year)
+      ->join('users','users.idUser = memberentries.IdUser')
+      ->order_by('scheduleDate')
+      ->order_by('idSchedule')
+      ->get();
+      echo $this->db->last_query(); die;
+    return $result;
+  }
+
   function newEntry($entry){
     $result = $this->db
-      ->insert('entries', $entry);
+      ->insert('memberentries', $entry);
     return $result;
   }
   //   // $result = $this->db
@@ -74,9 +88,30 @@ class Schedule_database extends CI_Model {
     return $result;
   }
 
-  function getGroupMembers($idGroup = null) {
+  function addGroup($groupName){
+    $result = $this->db
+      ->insert('groups', array('groupName' => $groupName));
+    return $result;
 
-    //if it comes form js function then get the value from post
+  }
+
+  function checkGroup($groupName){
+    $result = $this->db
+      ->where('groupName' , $groupName)
+      ->select('groups');
+    return $result;
+  }
+
+  function deleteGroup($idGroup) {
+    $result = $this->db
+      ->where('idGroup', $idGroup)
+      ->delete('groups');
+    return $result;
+  }
+
+  function getGroupMembers($idGroup = null) {
+    // echo "porra"; die();
+    //if it comes from js function then get the value from post
     if ($idGroup == null) {
         $idGroup = $this->input->post("idGroup");
     }
@@ -85,7 +120,6 @@ class Schedule_database extends CI_Model {
       ->where("idGroup", $idGroup)
       ->order_by("username", "asc")
       ->get("users");
-      // echo $this->db->last_query(); die;
       return $result;
   }
 
@@ -108,8 +142,12 @@ class Schedule_database extends CI_Model {
     return $result;
   }
 
-  function removeMember(){
-    $idUser = $this->input->post("idUser");
+  function removeMember($idUser = null){
+    //if it comes from js function then get the value from post
+    if ($idUser == null) {
+      $idUser = $this->input->post("idUser");
+    }
+
     $result = $this->db
       ->set("idGroup", null)
       ->where("idUser", $idUser)

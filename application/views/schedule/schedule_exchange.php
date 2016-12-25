@@ -1,15 +1,14 @@
 <div class="content">
   <div class="form-signin center well">
     <div class="row">
-      <select class="form-control" name="year" id="year" onchange="generateViewByGroupsTable($(year).val(),$(month).val())">
-        <option value="<?= $year = date('Y', strtotime(" - 1 year")); ?>"><?= $year = date('Y', strtotime(" - 1 year")); ?></option>
+      <select class="form-control" name="year" id="year" onchange="generateViewByMembersTable($(year).val(),$(month).val())">
         <option value="<?= $year = date('Y'); ?>" selected><?= $year = date('Y'); ?></option>
         <option value="<?= $year = date('Y', strtotime(" + 1 year")); ?>"><?= $year = date('Y', strtotime(" + 1 year")); ?></option>
       </select>
     </div>
     <br>
     <div class="row">
-      <select class="form-control" name="month" id="month" onchange="generateViewByGroupsTable($(year).val(),$(month).val())">
+      <select class="form-control" name="month" id="month" onchange="generateViewByMembersTable($(year).val(),$(month).val())">
         <option value="1">Selecione o mês...</option>
         <option value="1">Janeiro</option>
         <option value="2">Fevereiro</option>
@@ -30,9 +29,9 @@
 </div>
 <div class="table-responsive" name="schedule" id="schedule">
 </div>
-<button class="btn btn-primary" id="btn">Imprimir Escala</button>
+<!-- <button class="btn btn-primary" id="btn">Imprimir Escala</button> -->
 
-<script>
+<!-- <script>
     document.getElementById('btn').onclick = function() {
     var conteudo = document.getElementById('schedule').innerHTML,
     tela_impressao = window.open('CICCR:ESCALA DE SERVIÇO');
@@ -40,4 +39,4 @@
     tela_impressao.window.print();
     tela_impressao.window.close();
 };
-</script>
+</script> -->
