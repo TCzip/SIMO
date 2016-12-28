@@ -51,7 +51,7 @@ class Schedule_database extends CI_Model {
       ->order_by('scheduleDate')
       ->order_by('idSchedule')
       ->get();
-      echo $this->db->last_query(); die;
+      // echo $this->db->last_query(); die;
     return $result;
   }
 
