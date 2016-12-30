@@ -8,7 +8,6 @@
     </div>
       <select class="form-control" name="users" id="users">
         <option value="0">Adicionar Integrante...</option>
-      <?php echo $users_option; ?>
       </select>
       <br>
       <button class="btn btn-primary" type="button" name="button" onclick='addMember($(users).val(),$(groups).val())'>Inserir Membro</button>

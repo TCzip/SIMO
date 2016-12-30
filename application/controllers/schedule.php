@@ -216,9 +216,47 @@ class Schedule extends CI_Controller {
     $data['title'] = 'SIMO - Trocas de Serviço';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
+    $data['message'] = '';
     $data['body'] = 'schedule/schedule_exchange';
 
-    $this->load->view('inside', $data);
+    $this->form_validation->set_rules('scheduledOwnerUsers', 'scheduledOwnerUsers', 'required');
+    $this->form_validation->set_rules('scheduledOccupierUsers', 'scheduledOccupierUsers', 'required');
+    $this->form_validation->set_message('required', 'Selecione um Membros para a troca!');
+
+
+    if ($this->form_validation->run() == FALSE){
+      $this->load->view('inside', $data);
+    }else{
+      $today = date("Y-m-d");
+      $limitdate = date('Y-m-d', strtotime($today . " + 6 day"));
+      if ($this->input->post('ownerDate') >= $today && $this->input->post('occupierDate') >= $today){
+        if ($this->session->userdata['idPermission'] == 1){
+          if ($this->input->post('ownerDate') <= $limitdate || $this->input->post('occupierDate') <= $limitdate){
+            $data['message'] = 'Troca não permitida! Entre em contato com um administrador para efetuar a troca!';
+            $this->load->view('inside', $data);
+          }else{
+            // if there is not more than 2 schedules in sequence update exchangentries table and generates an exchange record
+            $data['message'] = 'Troca efetuada com sucesso!';
+            $this->load->view('inside', $data);
+          }
+        }else{//if adm just change
+          //set and update exchangentries table and generates an exchange record
+          $exchanges = array(
+            'idOwner' => $this->input->post('scheduledOwnerUsers'),
+            'idManager' => $this->session->userdata['idUser'],
+            'idOccupier' => $this->input->post('scheduledOccupierUsers'),
+            'idScheduleOwner' => $this->input->post('ownerSchedule'),
+            'idScheduleOccupier' => $this->input->post('occupierSchedule'),
+            'scheduleDateOwner' => $this->input->post('ownerDate'),
+            'scheduleDateOccupier' => $this->input->post('occupierDate')
+          );
+          $exchange = $this->Schedule_database->newExchange($exchanges);
+        }
+      }else{
+        $data['message'] = 'Data menor que data atual!';
+        $this->load->view('inside', $data);
+      }
+    }
   }
 
 
@@ -389,7 +427,8 @@ class Schedule extends CI_Controller {
       foreach($users->result() as $line) {
       $option .= '<tr>';
       $option .= '<td>'.$line->nickname.'</td>';
-      $option .= '<td><a name="botao" id="botao" href="#" title="Remover" onclick="removeMember('.$line->idUser.','.$line->idGroup.')" class="btn btn-danger fa fa-times"> </a></td>';
+      $option .= '<td><a name="botao" id="botao" href="#" title="Remover" onclick="removeMember('.
+      $line->idUser.','.$line->idGroup.')" class="btn btn-danger fa fa-times"> </a></td>';
       $option .= '</tr>';
       }
       echo $option;
@@ -409,14 +448,15 @@ class Schedule extends CI_Controller {
     $users = $this->Schedule_database->getUsers();
     if ($users->num_rows() > 0) {
 
-      $users_option = "<option value=''></option>";
+      $users_option = "<option value='0'>Adicionar Integrante...</option>";
 
       foreach($users->result() as $line) {
       $users_option .= "<option value='$line->idUser'>$line->nickname</option>";
       }
       echo $users_option;
     }else{
-      echo 'EQUIPE VAZIA';
+      $users_option = "<option value='0'>Todos Cadastrados</option>";
+      echo $users_option;
     }
   }
 
@@ -433,108 +473,204 @@ class Schedule extends CI_Controller {
 
     $year = $this->input->post('year');
     $month = $this->input->post('month');
-    $result = $this->Schedule_database->getMembersEntries($year,$month);//orderby date, idschedule
+    if ($month > 0) {
+      //generates first table for manager original entries
+      $result = $this->Schedule_database->getMembersEntries($year,$month);//orderby date, idschedule
 
-    $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-    $line =1;
-    while ($line != 5) {
-      for ($i=1; $i < $monthdays; $i++) {
-        $internalMatriz[$i][$line] = '';
-      }
-    $line++;
-    }
-
-    if ($result->num_rows() > 0) {
-      //fill matriz[31x7] with records -> month and year
-      foreach ($result->result() as $row){
-        // get day into date from table
-        $day = date_format(date_create($row->scheduleDate), 'd');
-
-        $nickname = substr($row->nickname, 0, 3);
-        if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
-          $internalMatriz[intval($day)][$row->idSchedule] = $internalMatriz[intval($day)][$row->idSchedule].'<br>'.$nickname;
-				  $hint[intval($day)][$row->idSchedule] = $hint[intval($day)][$row->idSchedule].';'.$row->nickname;
-        }else{
-          $internalMatriz[intval($day)][$row->idSchedule] = $nickname;
-          $hint[intval($day)][$row->idSchedule] = $row->nickname;
+      $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+      $line =1;
+      while ($line != 5) {
+        for ($i=1; $i < $monthdays + 1; $i++) {
+          $internalMatriz[$i][$line] = '';
         }
-
+      $line++;
       }
-      //write table header
-      $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-      $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
-      for ($i=1; $i < $monthdays + 1; $i++) {
-      $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
-      }
-      //starts body
-      $table .= '<tbody>';
-      //set first line and starts it
-      $line = 1;
-      $table .= '<tr height="40">';
 
-      //first collumn
-      while ( $line != 8) {
-        switch ($line) {
-          case 1:
-          $table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
-          break;
-          case 2:
-          $table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
-          break;
-          case 3:
-          $table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
-          break;
-          case 4:
-          $table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
-          break;
+      $line =1;
+      while ($line != 5) {
+        for ($i=1; $i < $monthdays + 1; $i++) {
+          $hint[$i][$line] = '';
         }
-
-        //using internal matriz, fill all days and schedules
-        for ($i=1; $i < $monthdays; $i++) {
-
-          $table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" title="'.$hint[$i][$line].'" >'
-          . $internalMatriz[$i][$line] .'</td>';
-        }
-        $line++;
-        $table .='<th>'.'<tr height="40">';
+      $line++;
       }
-      //closing table
-      $table .= '</tbody></table>';
-      $table .= '<br>';
 
-      // //write groups table
-      // $table .='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-      // $table .= '<th style="text-align:center; " width="40">'.'EQUIPE'.'</th>';
-      // $table .= '<th style="text-align:center; " width="40">'.'MEMBROS DA EQUIPE'.'</th>';
-      //
-      // //starts body
-      // $table .= '<tbody>';
-      //
-      // $groups = $this->Schedule_database->getGroups();
-      // foreach ($groups->result() as $group) {
-      //   $table .= '<td style="text-align:center; ">'.$group->groupName.'</td>';
-      //   $members = $this->Schedule_database->getGroupMembers($group->idGroup);
-      //   if ($members->num_rows() > 0){
-      //     // echo $group->groupName;
-      //     // echo $members->num_rows(); die();
-      //     $table .= '<td style="text-align:center; ">';
-      //     foreach ($members->result() as $member) {
-      //       $table .= $member->nickname.';';
-      //     }
-      //     $table .= '</td>';
-      //     $table .= '</tr>';
-      //   }else{
-      //     $table .= '<td style="text-align:center; "> EQUIPE VAZIA </td>';
-      //     $table .= '</tr>';
-      //   }
-      // }
-      // $table .= '<tr height="40">';
-      // $table .= '</tbody></table>';
-      echo $table;//generating table to return via javascript
-    }else{
-      echo '<label style="text-align:center; "> NENHUMA EQUIPE CADASTRADA PARA ESTA DATA!</lable>';
+      if ($result->num_rows() > 0) {
+        //fill matriz[31x7] with records -> month and year
+        foreach ($result->result() as $row){
+          // get day into date from table
+          $day = date_format(date_create($row->scheduleDate), 'd');
+
+          $nickname = substr($row->nickname, 0, 3);
+          if ($row->idSchedule < 5) {
+            if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
+              // echo intval($day); echo $row->idSchedule; die();
+
+              $internalMatriz[intval($day)][$row->idSchedule] = $internalMatriz[intval($day)][$row->idSchedule].'<br>'.$nickname;
+    				  $hint[intval($day)][$row->idSchedule] = $hint[intval($day)][$row->idSchedule].';'.$row->nickname;
+            }else{
+              $internalMatriz[intval($day)][$row->idSchedule] = $nickname;
+              $hint[intval($day)][$row->idSchedule] = $row->nickname;
+            }
+          }
+        }
+        //write table header
+        $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
+        $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
+        for ($i=1; $i < $monthdays + 1; $i++) {
+        $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
+        }
+        //starts body
+        $table .= '<tbody>';
+        //set first line and starts it
+        $line = 1;
+        $table .= '<tr height="40">';
+
+        //first collumn
+        while ( $line != 5) {
+          switch ($line) {
+            case 1:
+            $table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
+            break;
+            case 2:
+            $table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
+            break;
+            case 3:
+            $table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
+            break;
+            case 4:
+            $table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
+            break;
+          }
+
+          //using internal matriz, fill all days and schedules
+          for ($i=1; $i < $monthdays; $i++) {
+
+            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" title="'.$hint[$i][$line].'" >'
+            . $internalMatriz[$i][$line] .'</td>';
+          }
+          $line++;
+          $table .='<th>'.'<tr height="40">';
+        }
+        //closing table
+        $table .= '</tbody></table>';
+        $table .= '<br>';
+
+        echo $table;//generating table to return via javascript
+      }else{
+        echo '<label style="text-align:center; "> NENHUMA EQUIPE CADASTRADA PARA ESTA DATA!</lable>';
+      }
     }
   }
+
+  function generateViewExchangeTable(){
+
+    $year = $this->input->post('year');
+    $month = $this->input->post('month');
+    if ($month > 0) {
+      //generates first table for manager original entries
+      $result = $this->Schedule_database->getExchangeEntries($year,$month);//orderby date, idschedule
+
+      $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+      $line =1;
+      while ($line != 5) {
+        for ($i=1; $i < $monthdays + 1; $i++) {
+          $internalMatriz[$i][$line] = '';
+        }
+      $line++;
+      }
+
+      $line =1;
+      while ($line != 5) {
+        for ($i=1; $i < $monthdays + 1; $i++) {
+          $hint[$i][$line] = '';
+        }
+      $line++;
+      }
+
+      if ($result->num_rows() > 0) {
+        //fill matriz[31x7] with records -> month and year
+        foreach ($result->result() as $row){
+          // get day into date from table
+          $day = date_format(date_create($row->scheduleDate), 'd');
+
+          $nickname = substr($row->nickname, 0, 3);
+          if ($row->idSchedule < 5) {
+            if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
+              // echo intval($day); echo $row->idSchedule; die();
+
+              $internalMatriz[intval($day)][$row->idSchedule] = $internalMatriz[intval($day)][$row->idSchedule].'<br>'.$nickname;
+              $hint[intval($day)][$row->idSchedule] = $hint[intval($day)][$row->idSchedule].';'.$row->nickname;
+            }else{
+              $internalMatriz[intval($day)][$row->idSchedule] = $nickname;
+              $hint[intval($day)][$row->idSchedule] = $row->nickname;
+            }
+          }
+        }
+        //write table header
+        $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
+        $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
+        for ($i=1; $i < $monthdays + 1; $i++) {
+        $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
+        }
+        //starts body
+        $table .= '<tbody>';
+        //set first line and starts it
+        $line = 1;
+        $table .= '<tr height="40">';
+
+        //first collumn
+        while ( $line != 5) {
+          switch ($line) {
+            case 1:
+            $table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
+            break;
+            case 2:
+            $table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
+            break;
+            case 3:
+            $table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
+            break;
+            case 4:
+            $table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
+            break;
+          }
+
+          //using internal matriz, fill all days and schedules
+          for ($i=1; $i < $monthdays; $i++) {
+
+            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" title="'.$hint[$i][$line].'" >'
+            . $internalMatriz[$i][$line] .'</td>';
+          }
+          $line++;
+          $table .='<th>'.'<tr height="40">';
+        }
+        //closing table
+        $table .= '</tbody></table>';
+        $table .= '<br>';
+
+        echo $table;//generating table to return via javascript
+      }
+    }
+  }
+
+  function getScheduleMembers(){
+
+    $members = $this->Schedule_database->getScheduleMembers();
+    if ($members->num_rows() > 0) {
+
+      $members_option = "<option value='0'>Selecione o Membro...</option>";
+
+      foreach($members->result() as $member) {
+      $members_option .= "<option value='$member->idUser'>$member->nickname</option>";
+      }
+      echo $members_option;
+    }else{
+      $members_option = "<option value='0'>Escala sem membros.</option>";
+      echo $members_option;
+    }
+  }
+
+
   //end of section for exchange page
 
 

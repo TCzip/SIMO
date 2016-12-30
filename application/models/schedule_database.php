@@ -43,44 +43,60 @@ class Schedule_database extends CI_Model {
 
   function getMembersEntries($year,$month){
     $result = $this->db
-      ->select('users.username, users.idUser, memberentries.idSchedule, memberentries.scheduleDate')
+      ->select('users.nickname, users.idUser, memberentries.idSchedule, memberentries.scheduleDate')
       ->from('memberentries')
       ->where('month(scheduleDate)', $month)
       ->where('year(scheduleDate)', $year)
       ->join('users','users.idUser = memberentries.IdUser')
       ->order_by('scheduleDate')
       ->order_by('idSchedule')
+      ->order_by('nickname')
       ->get();
-      // echo $this->db->last_query(); die;
+      //  echo $this->db->last_query(); die;
     return $result;
   }
+
+  function getExchangeEntries($year,$month){
+    $result = $this->db
+      ->select('users.nickname, users.idUser, exchangentries.idSchedule, exchangentries.scheduleDate')
+      ->from('exchangentries')
+      ->where('month(scheduleDate)', $month)
+      ->where('year(scheduleDate)', $year)
+      ->join('users','users.idUser = exchangentries.IdUser')
+      ->order_by('scheduleDate')
+      ->order_by('idSchedule')
+      ->order_by('nickname')
+      ->get();
+    return $result;
+  }
+
+
 
   function newEntry($entry){
     $result = $this->db
       ->insert('memberentries', $entry);
+    $result = $this->db
+      ->insert('exchangentries', $entry);
     return $result;
   }
-  //   // $result = $this->db
-  //   //   ->select('idUser')
-  //   //   ->where('nickname', $data['groupSelection'])
-  //   //   ->get('users')
-  //   //   ->result();
-  //
-  //   // $newEntry = array(
-  //   //   'idUser'     => $result[0]->idUser,
-  //   //   'idCreator'  => $this->session->userdata['idUser'],
-  //   //   'startDate'  => $data['startDate'],
-  //   //   'endDate'  => $data['endDate'],
-  //   // );
-  //   //
-  //   // $result = $this->db
-  //   //   ->select('nickname')
-  //   //   ->where('idPermission', $idPermission)
-  //   //   ->order_by('nickname', 'asc')
-  //   //   ->get('users')
-  //   //   ->result();
-  //   // return $result;
-  // }
+
+  function newExchange($exchanges){
+
+    //update table exchangentries
+    $this->db
+      ->set('idUser', $exchanges['idOccupier'])
+      ->where(array('idUser' => $idOwner, 'scheduleDate' => $scheduleDateOwner, 'idSchedule' => $idScheduleOwner))
+      ->update('exchangentries');
+
+    $this->db
+      ->set('idUser', $idOwner)
+      ->where(array('idUser' => $idOccupie, 'scheduleDate' => $scheduleDateOccupier, 'idSchedule' => $idScheduleOccupier))
+      ->update('exchangentries');
+
+    $result = $this->db
+      ->insert('exchanges', $exchanges);
+      return $result;
+  }
 
   function getGroups() {
     $this->db->order_by("groupName", "asc");
@@ -106,6 +122,22 @@ class Schedule_database extends CI_Model {
     $result = $this->db
       ->where('idGroup', $idGroup)
       ->delete('groups');
+    return $result;
+  }
+
+  function getScheduleMembers(){
+    $date = $this->input->post("date");
+    $schedule = $this->input->post("schedule");
+
+    $result = $this->db
+      ->select('users.nickname, users.idUser')
+      ->from('users')
+      ->where(array('scheduleDate' => $date, 'idSchedule' => $schedule))
+      ->join('exchangentries','users.idUser = exchangentries.IdUser')
+      ->order_by('nickname')
+      ->get();
+
+        // echo $this->db->last_query(); die;
     return $result;
   }
 

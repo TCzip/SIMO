@@ -34,12 +34,30 @@
   <script type="text/javascript">
   var base_url = '<? echo base_url() ?>';
 
+  function resetOwnerSchedule(){
+  document.getElementById("ownerSchedule").selectedIndex = 0;
+  }
+
+  function resetOccupierSchedule(){
+  document.getElementById("occupierSchedule").selectedIndex = 0;
+  }
+
+  function getOwnerScheduleMembers(date,schedule){
+    $.post(base_url+"schedule/getScheduleMembers", {date : date, schedule : schedule},function(data){$('#scheduledOwnerUsers').html(data);});
+  }
+
+  function getOccupierScheduleMembers(date,schedule){
+    $.post(base_url+"schedule/getScheduleMembers", {date : date, schedule : schedule},function(data){$('#scheduledOccupierUsers').html(data);});
+  }
+
   function generateViewByGroupsTable(year,month){
     $.post(base_url+"schedule/generateViewByGroupsTable", {year : year, month : month},function(data){$('#schedule').html(data);});
   }
 
   function generateViewByMembersTable(year,month){
+    // alert(year + month);
     $.post(base_url+"schedule/generateViewByMembersTable", {year : year, month : month},function(data){$('#schedule').html(data);});
+    $.post(base_url+"schedule/generateViewExchangeTable", {year : year, month : month},function(data){$('#schedule2').html(data);});
   }
 
   function addGroup(groupName){
@@ -54,7 +72,6 @@
   function deleteGroup(idGroup){
     $.post(base_url+"schedule/deleteGroup", {idGroup : idGroup});
     getGroups();
-    // alert(idGroup);
   }
 
   function getGroupMembers(idGroup){
@@ -72,7 +89,6 @@
 
   function getUsers(){
     $.post(base_url+"schedule/getUsers",function(data){$('#users').html(data);});
-    // die();
   }
 
   function addMember(idUser,idGroup){
