@@ -179,7 +179,7 @@ class Schedule extends CI_Controller {
   }
 
   function newGroup(){
-    $data['title'] = 'SIMO - Gerenciar equipes';
+    $data['title'] = 'SIMO - Nova Equipe';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
     $data['body'] = 'schedule/schedule_newGroup';
@@ -200,11 +200,11 @@ class Schedule extends CI_Controller {
   function groups(){
     $data['title'] = 'SIMO - Configurar Equipes';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
-    $data['menu'] = '4';
+    $data['menu'] = '0';
     $data['body'] = 'schedule/schedule_groups';
     $this->load->model('settings_database');
     $groups = $this->Schedule_database->getGroups();
-    $option = "";
+    $option = "<option value='0'>Escolha a Equipe...</option>";
     foreach($groups->result() as $line){
       $option .= "<option value='$line->idGroup'>$line->groupName</option>";
     }
@@ -267,109 +267,109 @@ class Schedule extends CI_Controller {
     $year = $this->input->post('year');
     $month = $this->input->post('month');
     $result = $this->Schedule_database->getGroupsEntries($year,$month);//orderby date, idschedule
+    // print_r($result); die();
+    $firstRow = $result->first_row();
+    // $startDate = $firstRow->scheduleDate;
 
-    if ($month > 0) {
-      $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-      $line =1;
-      while ($line != 8) {
-        for ($i=1; $i < $monthdays; $i++) {
-          $internalMatriz[$i][$line] = '';
-        }
-      $line++;
+    $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $line =1;
+    while ($line != 8) {
+      for ($i=1; $i < $monthdays; $i++) {
+        $internalMatriz[$i][$line] = '';
       }
+    $line++;
+    }
 
-      if ($result->num_rows() > 0) {
-        //fill matriz[31x7] with records -> month and year
-        foreach ($result->result() as $row){
-          // get day into date from table
-          $day = date_format(date_create($row->scheduleDate), 'd');
+    if ($result->num_rows() > 0) {
+      //fill matriz[31x7] with records -> month and year
+      foreach ($result->result() as $row){
+        // get day into date from table
+        $day = date_format(date_create($row->scheduleDate), 'd');
 
-          $internalMatriz[intval($day)][$row->idSchedule] = $row->groupName;
-        }
-        //write table header
-        $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-        $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
-        for ($i=1; $i < $monthdays + 1; $i++) {
-        $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
-        }
-        //starts body
-    		$table .= '<tbody>';
-    		//set first line and starts it
-    		$line = 1;
-    		$table .= '<tr height="40">';
+        $internalMatriz[intval($day)][$row->idSchedule] = $row->groupName;
+      }
+      //write table header
+      $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
+      $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
+      for ($i=1; $i < $monthdays + 1; $i++) {
+      $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
+      }
+      //starts body
+  		$table .= '<tbody>';
+  		//set first line and starts it
+  		$line = 1;
+  		$table .= '<tr height="40">';
 
-    		//first collumn
-    		while ( $line != 8) {
-    			switch ($line) {
-    				case 1:
-    				$table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
-    				break;
-    				case 2:
-    				$table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
-    				break;
-    				case 3:
-    				$table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
-    				break;
-    				case 4:
-    				$table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
-    				break;
-            case 5:
-            $table .= '<td style="text-align:center; ">'."FOLGA".'</td>';
-            break;
-            case 6:
-            $table .= '<td style="text-align:center; ">'."DESCANSO".'</td>';
-            break;
-            case 7:
-            $table .= '<td style="text-align:center; ">'."SOBREAVISO".'</td>';
-            break;
-    			}
+  		//first collumn
+  		while ( $line != 8) {
+  			switch ($line) {
+  				case 1:
+  				$table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
+  				break;
+  				case 2:
+  				$table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
+  				break;
+  				case 3:
+  				$table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
+  				break;
+  				case 4:
+  				$table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
+  				break;
+          case 5:
+          $table .= '<td style="text-align:center; ">'."FOLGA".'</td>';
+          break;
+          case 6:
+          $table .= '<td style="text-align:center; ">'."DESCANSO".'</td>';
+          break;
+          case 7:
+          $table .= '<td style="text-align:center; ">'."SOBREAVISO".'</td>';
+          break;
+  			}
 
-          //using internal matriz, fill all days and schedules
-    			for ($i=1; $i < $monthdays; $i++) {
+        //using internal matriz, fill all days and schedules
+  			for ($i=1; $i < $monthdays; $i++) {
 
-    				$table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" name="11" >'
-            . $internalMatriz[$i][$line] .'</td>';
-    			}
-    			$line++;
-    			$table .='<th>'.'<tr height="40">';
-    		}
-    		//closing table
-    		$table .= '</tbody></table>';
-        $table .= '<br>';
+  				$table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" name="11" >'
+          . $internalMatriz[$i][$line] .'</td>';
+  			}
+  			$line++;
+  			$table .='<th>'.'<tr height="40">';
+  		}
+  		//closing table
+  		$table .= '</tbody></table>';
+      $table .= '<br>';
 
-        //write groups table
-        $table .='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-        $table .= '<th style="text-align:center; " width="40">'.'EQUIPE'.'</th>';
-        $table .= '<th style="text-align:center; " width="40">'.'MEMBROS DA EQUIPE'.'</th>';
+      //write groups table
+      $table .='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
+      $table .= '<th style="text-align:center; " width="40">'.'EQUIPE'.'</th>';
+      $table .= '<th style="text-align:center; " width="40">'.'MEMBROS DA EQUIPE'.'</th>';
 
-        //starts body
-        $table .= '<tbody>';
+      //starts body
+      $table .= '<tbody>';
 
-        $groups = $this->Schedule_database->getGroups();
-        foreach ($groups->result() as $group) {
-          $table .= '<td style="text-align:center; ">'.$group->groupName.'</td>';
-          $members = $this->Schedule_database->getGroupMembers($group->idGroup);
-          if ($members->num_rows() > 0){
-            // echo $group->groupName;
-            // echo $members->num_rows(); die();
-            $table .= '<td style="text-align:center; ">';
-            foreach ($members->result() as $member) {
-              $table .= $member->nickname.';';
-            }
-            $table .= '</td>';
-            $table .= '</tr>';
-          }else{
-            $table .= '<td style="text-align:center; "> EQUIPE VAZIA </td>';
-            $table .= '</tr>';
+      $groups = $this->Schedule_database->getGroups();
+      foreach ($groups->result() as $group) {
+        $table .= '<td style="text-align:center; ">'.$group->groupName.'</td>';
+        $members = $this->Schedule_database->getGroupMembers($group->idGroup);
+        if ($members->num_rows() > 0){
+          // echo $group->groupName;
+          // echo $members->num_rows(); die();
+          $table .= '<td style="text-align:center; ">';
+          foreach ($members->result() as $member) {
+            $table .= $member->nickname.';';
           }
+          $table .= '</td>';
+          $table .= '</tr>';
+        }else{
+          $table .= '<td style="text-align:center; "> EQUIPE VAZIA </td>';
+          $table .= '</tr>';
         }
-        $table .= '<tr height="40">';
-        $table .= '</tbody></table>';
-    		echo $table;//generating table to return via javascript
-      }else{
-        echo '<label style="text-align:center; "> NENHUMA EQUIPE CADASTRADA PARA ESTA DATA!</lable>';
       }
+      $table .= '<tr height="40">';
+      $table .= '</tbody></table>';
+  		echo $table;//generating table to return via javascript
+    }else{
+      echo '<label style="text-align:center; "> NENHUMA EQUIPE CADASTRADA PARA ESTA DATA!</lable>';
     }
   }
 
@@ -448,14 +448,14 @@ class Schedule extends CI_Controller {
     $users = $this->Schedule_database->getUsers();
     if ($users->num_rows() > 0) {
 
-      $users_option = "<option value='0' disabled selected>Adicionar Integrante...</option>";
+      $users_option = "<option value='0'>Adicionar Integrante...</option>";
 
       foreach($users->result() as $line) {
       $users_option .= "<option value='$line->idUser'>$line->nickname</option>";
       }
       echo $users_option;
     }else{
-      $users_option = "<option value='0' disabled selected>Todos Cadastrados</option>";
+      $users_option = "<option value='0'>Todos Cadastrados</option>";
       echo $users_option;
     }
   }

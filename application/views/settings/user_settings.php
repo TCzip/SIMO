@@ -1,7 +1,4 @@
-<div class="container">
-	<div class="content">
-
-
+	<br>
 	<div class="col-md-11">
 		<div class="row">
 			<?= anchor('user_create', 'Novo Cadastro', array('class' => 'btn btn-primary')); ?>
@@ -69,6 +66,3 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
-</div>
-
-</div>
