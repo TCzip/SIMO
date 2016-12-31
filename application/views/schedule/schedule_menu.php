@@ -18,7 +18,7 @@
             if ($idPermission == 2){
         		echo '
             <a href="schedule_create"  class="list-group-item"><i class="fa fa-calendar fa-2x pull-left"></i>
-	            <h4 class="list-group-item-heading">Criar Escalas </h4>
+	            <h4 class="list-group-item-heading">Escalar equipes</h4>
 	            <p class="list-group-item-text">Criação de escala do 0800 </p>
           	</a>
             <a href="#"  class="list-group-item"><i class="fa fa-calendar-o fa-2x pull-left"></i>
@@ -30,11 +30,11 @@
               <p class="list-group-item-text">Visualização e impressão de escala do 0800 </p>
             </a>
             <a href="schedule_newGroup"  class="list-group-item"><i class="fa fa-pencil-square-o fa-2x pull-left"></i>
-            <h4 class="list-group-item-heading">Configurar Equipes </h4>
+            <h4 class="list-group-item-heading">Gerenciar Equipes </h4>
             <p class="list-group-item-text">Configuração de equipes do 0800 </p>
             </a>
             <a href="schedule_groups"  class="list-group-item"><i class="fa fa-user-plus fa-2x pull-left"></i>
-            <h4 class="list-group-item-heading">Adicionar Membros as Equipes </h4>
+            <h4 class="list-group-item-heading">Gerenciar Membros das Equipes </h4>
             <p class="list-group-item-text">Configuração de membros nas equipes do 0800 </p>
             </a>
             <a href="schedule_exchange"  class="list-group-item"><i class="fa fa-retweet fa-2x pull-left"></i>
