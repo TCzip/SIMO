@@ -30,12 +30,12 @@ class Schedule extends CI_Controller {
       //verifiry if between start and end dates already have entries.
       $startDate =  $this->input->post('startDate');
       $endDate = $this->input->post('endDate');
-      $oldentries = $this->Schedule_database->checkOldEntries($startDate,$endDate);
-      if ($oldentries->num_rows()) {
-        //if entries between dates than set message
-        $data['message'] = '1';
-        $this->load->view('inside', $data);
-      }else{
+// $oldentries = $this->Schedule_database->checkOldEntries($startDate,$endDate);
+// if ($oldentries->num_rows()) {
+//   //if entries between dates than set message
+//   $data['message'] = '1';
+//   $this->load->view('inside', $data);
+// }else{
         $scheduleDate = $startDate;
         $idSchedule = $this->input->post('idSchedule');
         $groupEntry['idGroup'] = $this->input->post('groupSelection');
@@ -165,7 +165,7 @@ class Schedule extends CI_Controller {
         }
         $data['message'] = '2';
         $this->load->view('inside', $data);
-      }
+// }
     }
   }
 
@@ -235,7 +235,32 @@ class Schedule extends CI_Controller {
             $data['message'] = 'Troca não permitida! Entre em contato com um administrador para efetuar a troca!';
             $this->load->view('inside', $data);
           }else{
-            // if there is not more than 2 schedules in sequence update exchangentries table and generates an exchange record
+            // if there is no more than 2 schedules in sequence update exchangentries table and generates an exchange record
+            //check if owner id is the same as manager
+            if ($this->input->post('scheduledOwnerUsers') != $this->session->userdata['idUser']  ){
+              $data['message'] = 'Você deve estar na primeira escala selecionada!';
+              $this->load->view('inside', $data);
+            }
+
+            $exchanges = array(
+              'idOwner' => $this->input->post('scheduledOwnerUsers'),
+              'idManager' => $this->session->userdata['idUser'],
+              'idOccupier' => $this->input->post('scheduledOccupierUsers'),
+              'idScheduleOwner' => $this->input->post('ownerSchedule'),
+              'idScheduleOccupier' => $this->input->post('occupierSchedule'),
+              'scheduleDateOwner' => $this->input->post('ownerDate'),
+              'scheduleDateOccupier' => $this->input->post('occupierDate')
+            );
+
+            //check if there is not two schedules in sequence
+            $result = $this->checkSchedules($exchanges);
+
+            if ($result) {
+              $data['message'] = 'Um dos usuários ultrapassou o limite de escalas!';
+              $this->load->view('inside', $data);
+            }
+
+            $exchange = $this->Schedule_database->newExchange($exchanges);
             $data['message'] = 'Troca efetuada com sucesso!';
             $this->load->view('inside', $data);
           }
@@ -251,12 +276,109 @@ class Schedule extends CI_Controller {
             'scheduleDateOccupier' => $this->input->post('occupierDate')
           );
           $exchange = $this->Schedule_database->newExchange($exchanges);
+          $data['message'] = 'Troca efetuada com sucesso!';
+          $this->load->view('inside', $data);
         }
       }else{
         $data['message'] = 'Data menor que data atual!';
         $this->load->view('inside', $data);
       }
     }
+  }
+
+  function checkSchedules($exchanges){
+
+    $check = array(
+      array(
+        'idUser' => $exchanges['idOccupier'],
+        'idSchedule' => $exchanges['idScheduleOwner'],
+        'scheduledate' => $exchanges['scheduleDateOwner']
+      ),
+      array(
+        'idUser' => $exchanges['idOwner'],
+        'idSchedule' => $exchanges['idScheduleOccupier'],
+        'scheduledate' => $exchanges['scheduleDateOccupier']
+      )
+    );
+
+    $validation = FALSE;
+
+    foreach ($check as $data) {
+      $idUser = $data['idUser'];
+      $idSchedule = $data['idSchedule'];
+      $scheduledate = $data['scheduledate'];
+
+      $counter = 0;
+      //back
+      if ($idSchedule == 1) {
+        $idSchedule = 4;
+        $scheduledate = date('Y-m-d', strtotime($scheduledate . " - 1 day"));
+        $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+        if ($result->num_rows() > 0) {
+          $counter = $counter + 1;
+        }
+      }else {
+        $idSchedule = $idSchedule - 1;
+        $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+        if ($result->num_rows() > 0) {
+          $counter = $counter + 1;
+        }
+      }
+
+      if ($counter > 1) {
+        if ($idSchedule == 1) {
+          $idSchedule = 4;
+          $scheduledate = date('Y-m-d', strtotime($scheduledate . " - 1 day"));
+          $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+          if ($result->num_rows() > 0) {
+            $counter = $counter + 1;
+          }
+        }else {
+          $idSchedule = $idSchedule - 1;
+          $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+          if ($result->num_rows() > 0) {
+            $counter = $counter + 1;
+          }
+        }
+      }
+
+      //forward
+      if ($idSchedule == 4) {
+        $idSchedule = 1;
+        $scheduledate = date('Y-m-d', strtotime($scheduledate . " + 1 day"));
+        $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+        if ($result->num_rows() > 0) {
+          $counter = $counter + 1;
+        }
+      }else {
+        $idSchedule = $idSchedule + 1;
+        $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+        if ($result->num_rows() > 0) {
+          $counter = $counter + 1;
+        }
+      }
+
+      if ($counter > 1) {
+        if ($idSchedule == 4) {
+          $idSchedule = 1;
+          $scheduledate = date('Y-m-d', strtotime($scheduledate . " + 1 day"));
+          $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+          if ($result->num_rows() > 0) {
+            $counter = $counter + 1;
+          }
+        }else {
+          $idSchedule = $idSchedule + 1;
+          $result = $this->Schedule_database->checkSchedules($idUser,$idSchedule,$scheduledate);
+          if ($result->num_rows() > 0) {
+            $counter = $counter + 1;
+          }
+        }
+      }
+      if ($counter > 1) {
+        $validation = TRUE;
+      }
+    }
+    return $validation;
   }
 
 

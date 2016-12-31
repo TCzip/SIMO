@@ -70,7 +70,12 @@ class Schedule_database extends CI_Model {
     return $result;
   }
 
-
+  function checkSchedules($idUser,$idSchedule,$scheduledate){
+    $result = $this->db
+      ->where(array('idUser' => $idUser, 'idSchedule' => $idSchedule, 'scheduleDate' => $scheduledate))
+      ->get('exchangentries');
+    return $result;
+  }
 
   function newEntry($entry){
     $result = $this->db
@@ -85,12 +90,12 @@ class Schedule_database extends CI_Model {
     //update table exchangentries
     $this->db
       ->set('idUser', $exchanges['idOccupier'])
-      ->where(array('idUser' => $idOwner, 'scheduleDate' => $scheduleDateOwner, 'idSchedule' => $idScheduleOwner))
+      ->where(array('idUser' => $exchanges['idOwner'], 'scheduleDate' => $exchanges['scheduleDateOwner'], 'idSchedule' => $exchanges['idScheduleOwner']))
       ->update('exchangentries');
 
     $this->db
-      ->set('idUser', $idOwner)
-      ->where(array('idUser' => $idOccupie, 'scheduleDate' => $scheduleDateOccupier, 'idSchedule' => $idScheduleOccupier))
+      ->set('idUser', $exchanges['idOwner'])
+      ->where(array('idUser' => $exchanges['idOccupier'], 'scheduleDate' => $exchanges['scheduleDateOccupier'], 'idSchedule' => $exchanges['idScheduleOccupier']))
       ->update('exchangentries');
 
     $result = $this->db
