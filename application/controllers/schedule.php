@@ -622,7 +622,7 @@ class Schedule extends CI_Controller {
           // get day into date from table
           $day = date_format(date_create($row->scheduleDate), 'd');
 
-          $nickname = substr($row->nickname, 0, 3);
+          $nickname = substr($row->nickname, 0, 2);
           if ($row->idSchedule < 5) {
             if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
               // echo intval($day); echo $row->idSchedule; die();
@@ -636,38 +636,38 @@ class Schedule extends CI_Controller {
           }
         }
         //write table header
-        $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-        $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
+        $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="30" >';
+        $table .= '<th style="text-align:center; font-size:12px" width="30">ESCALA</th>';
         for ($i=1; $i < $monthdays + 1; $i++) {
-        $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
+        $table .= '<th  style="text-align:center; " width="30" >'.$i.'</th>';
         }
         //starts body
         $table .= '<tbody>';
         //set first line and starts it
         $line = 1;
-        $table .= '<tr height="40">';
+        $table .= '<tr weight="10">';
 
         //first collumn
         while ( $line != 5) {
           switch ($line) {
             case 1:
-            $table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px">'."07:00<br>13:00".'</td>';
             break;
             case 2:
-            $table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px">'."13:00<br>18:00".'</td>';
             break;
             case 3:
-            $table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px">'."18:00<br>23:00".'</td>';
             break;
             case 4:
-            $table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px">'."23:00<br>07:00".'</td>';
             break;
           }
 
           //using internal matriz, fill all days and schedules
           for ($i=1; $i < $monthdays; $i++) {
 
-            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" title="'.$hint[$i][$line].'" >'
+            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:12px;" title="'.$hint[$i][$line].'" >'
             . $internalMatriz[$i][$line] .'</td>';
           }
           $line++;
@@ -715,7 +715,7 @@ class Schedule extends CI_Controller {
           // get day into date from table
           $day = date_format(date_create($row->scheduleDate), 'd');
 
-          $nickname = substr($row->nickname, 0, 3);
+          $nickname = substr($row->nickname, 0, 2);
           if ($row->idSchedule < 5) {
             if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
               // echo intval($day); echo $row->idSchedule; die();
@@ -730,37 +730,37 @@ class Schedule extends CI_Controller {
         }
         //write table header
         $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
-        $table .= '<th style="text-align:center; " width="40">'.'ESCALA'.'</th>';
+        $table .= '<th style="text-align:center;font-size:12px; " width="30">ESCALA</th>';
         for ($i=1; $i < $monthdays + 1; $i++) {
-        $table .= '<th  style="text-align:center; " width="40" >'.$i.'</th>';
+        $table .= '<th  style="text-align:center; text-size:12px; " width="30" >'.$i.'</th>';
         }
         //starts body
         $table .= '<tbody>';
         //set first line and starts it
         $line = 1;
-        $table .= '<tr height="40">';
+        $table .= '<tr height="30">';
 
         //first collumn
         while ( $line != 5) {
           switch ($line) {
             case 1:
-            $table .= '<td style="text-align:center; ">'."07:00 - 13:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px ">'."07:00<br>13:00".'</td>';
             break;
             case 2:
-            $table .= '<td style="text-align:center; ">'."13:00 - 18:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px ">'."13:00<br>18:00".'</td>';
             break;
             case 3:
-            $table .= '<td style="text-align:center; ">'."18:00 - 23:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px ">'."18:00<br>23:00".'</td>';
             break;
             case 4:
-            $table .= '<td style="text-align:center; ">'."23:00 - 07:00".'</td>';
+            $table .= '<td style="text-align:center;font-weight:bold; font-size:12px ">'."23:00<br>07:00".'</td>';
             break;
           }
 
           //using internal matriz, fill all days and schedules
           for ($i=1; $i < $monthdays; $i++) {
 
-            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:20px;" title="'.$hint[$i][$line].'" >'
+            $table .= '<td style="text-align:center; padding-bottom:3px; font-size:12px;" title="'.$hint[$i][$line].'" >'
             . $internalMatriz[$i][$line] .'</td>';
           }
           $line++;

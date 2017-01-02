@@ -59,6 +59,7 @@
                       echo '<a class="close" data-dismiss="alert" aria-hidden="true">x</a>';
                       echo $error.'</div>';
                       echo '</div>';
+
                     };
                   ?>
                 </div>
@@ -146,13 +147,22 @@
               <h3 class="panel-title"><strong>3 </strong>Confirmar troca</h3>
             </div>
             <div class="panel-body">
+              <?php if($message){?>
+              <div class="row">
+                <div class="col-md-12">
+                  <div>
+                    <div class="alert alert-success">
+                      <a class="close" data-dismiss="alert" aria-hidden="true">x</a>
+                      <?php echo $message; ?>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <?php }; ?>
               <div class="row">
                 <div class="form-group col-md-12">
                   <input class="btn btn-sm btn-primary btn-block" type="submit" name="submit" value="EFETUAR TROCA!">
                 </div>
-              </div>
-              <div class="row">
-                <?php echo $message ?>
               </div>
             </div>
           </div>
@@ -163,7 +173,7 @@
   </div>
 </div>
 
-<div class="table-responsive" name="schedule" id="schedule"></div>
+<!-- <div class="table-responsive" name="schedule" id="schedule"></div> -->
 <div class="table-responsive" name="schedule2" id="schedule2"></div>
 
 <script>
