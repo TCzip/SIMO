@@ -9,7 +9,7 @@
 	            <h4 class="list-group-item-heading">Consulta de escalas</h4>
 	            <p class="list-group-item-text">Consulta a escalas mensais </p>
           	</a>
-            <a href="#"  class="list-group-item"><i class="fa fa-retweet fa-2x pull-left"></i>
+            <a href="schedule_exchange"  class="list-group-item"><i class="fa fa-retweet fa-2x pull-left"></i>
             	<h4 class="list-group-item-heading">Trocas de Serviços </h4>
             	<p class="list-group-item-text">Trocas de serviços devem ser feitas com uma semana de antecedência </p>
           	</a>
@@ -29,6 +29,10 @@
               <h4 class="list-group-item-heading">Visualizar Escalas por Grupo </h4>
               <p class="list-group-item-text">Visualização e impressão de escala do 0800 </p>
             </a>
+            <a href="schedule_viewByMembers"  class="list-group-item"><i class="fa fa-desktop fa-2x pull-left"></i>
+              <h4 class="list-group-item-heading">Visualizar Escalas por Membros </h4>
+              <p class="list-group-item-text">Visualização e impressão de escala do 0800 </p>
+            </a>
             <a href="schedule_newGroup"  class="list-group-item"><i class="fa fa-pencil-square-o fa-2x pull-left"></i>
             <h4 class="list-group-item-heading">Gerenciar Equipes </h4>
             <p class="list-group-item-text">Configuração de equipes do 0800 </p>
@@ -41,6 +45,10 @@
 	            <h4 class="list-group-item-heading">Troca de serviços Extraordinários </h4>
 	            <p class="list-group-item-text">Troca de serviços pelo administrador </p>
           	</a>
+            <a href="schedule_exchangeAdjustment"  class="list-group-item"><i class="fa fa-wrench fa-2x pull-left"></i>
+              <h4 class="list-group-item-heading">Ajuste de Escalas </h4>
+              <p class="list-group-item-text">Alteração na escala sem troca </p>
+            </a>
           	<a href="#"  class="list-group-item"><i class="fa fa-file-text fa-2x pull-left"></i>
 	            <h4 class="list-group-item-heading">Relatórios </h4>
 	            <p class="list-group-item-text">Relatórios de trocas realizadas </p>

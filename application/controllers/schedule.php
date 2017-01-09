@@ -7,10 +7,15 @@ class Schedule extends CI_Controller {
     parent::__construct();
     $this->load->library('form_validation');
     $this->load->model('Schedule_database');
+    $this->load->model('login_database');
   }
 
-  //    Separated by controller functions and javascript php functions
+  //  Separated by controller functions and javascript php functions
   function create(){
+
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
 
     $data['title'] = 'SIMO - Criar Escala';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
@@ -171,6 +176,10 @@ class Schedule extends CI_Controller {
 
   function viewByGroups(){
 
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
     $data['title'] = 'SIMO - Visualizar Escala';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
@@ -178,7 +187,24 @@ class Schedule extends CI_Controller {
     $this->load->view('inside', $data);
   }
 
+  function viewByMembers(){
+
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
+    $data['title'] = 'SIMO - Visualizar Escala';
+    $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+    $data['menu'] = '4';
+    $data['body'] = 'schedule/schedule_viewByMembers';
+    $this->load->view('inside', $data);
+  }
+
   function newGroup(){
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
     $data['title'] = 'SIMO - Gerenciar equipes';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
@@ -198,6 +224,10 @@ class Schedule extends CI_Controller {
   }
 
   function groups(){
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
     $data['title'] = 'SIMO - Configurar Equipes';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
@@ -213,6 +243,10 @@ class Schedule extends CI_Controller {
   }
 
   function exchange(){
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
     $data['title'] = 'SIMO - Trocas de Serviço';
     $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
     $data['menu'] = '4';
@@ -229,18 +263,21 @@ class Schedule extends CI_Controller {
     }else{
       $today = date("Y-m-d");
       $limitdate = date('Y-m-d', strtotime($today . " + 6 day"));
-      if ($this->input->post('ownerDate') >= $today && $this->input->post('occupierDate') >= $today){
-        if ($this->session->userdata['idPermission'] == 1){
-          if ($this->input->post('ownerDate') <= $limitdate || $this->input->post('occupierDate') <= $limitdate){
-            $data['message'] = 'Troca não permitida! Entre em contato com um administrador para efetuar a troca!';
+      if ($this->session->userdata['idPermission'] == 1){
+        if ($this->input->post('ownerDate') < $today && $this->input->post('occupierDate') < $today){
+          $data['message'] = 'Data menor que data atual!';
+          $this->load->view('inside', $data);
+        }
+        if ($this->input->post('ownerDate') <= $limitdate || $this->input->post('occupierDate') <= $limitdate){
+          $data['message'] = 'Troca nço permitida! Entre em contato com um administrador para efetuar a troca!';
+          $this->load->view('inside', $data);
+        }else{
+          // if there is no more than 2 schedules in sequence update exchangentries table and generates an exchange record
+          //check if owner id is the same as manager
+          if ($this->input->post('scheduledOwnerUsers') != $this->session->userdata['idUser']  ){
+            $data['message'] = 'Você deve estar na primeira escala selecionada!';
             $this->load->view('inside', $data);
-          }else{
-            // if there is no more than 2 schedules in sequence update exchangentries table and generates an exchange record
-            //check if owner id is the same as manager
-            if ($this->input->post('scheduledOwnerUsers') != $this->session->userdata['idUser']  ){
-              $data['message'] = 'Você deve estar na primeira escala selecionada!';
-              $this->load->view('inside', $data);
-            }
+          }
 
             $exchanges = array(
               'idOwner' => $this->input->post('scheduledOwnerUsers'),
@@ -252,37 +289,80 @@ class Schedule extends CI_Controller {
               'scheduleDateOccupier' => $this->input->post('occupierDate')
             );
 
-            //check if there is not two schedules in sequence
-            $result = $this->checkSchedules($exchanges);
+          //check if there is not two schedules in sequence
+          $result = $this->checkSchedules($exchanges);
 
-            if ($result) {
-              $data['message'] = 'Um dos usuários ultrapassou o limite de escalas!';
-              $this->load->view('inside', $data);
-            }
-
-            $exchange = $this->Schedule_database->newExchange($exchanges);
-            $data['message'] = 'Troca efetuada com sucesso!';
+          if ($result) {
+            $data['message'] = 'Um dos usuários ultrapassou o limite de escalas!';
             $this->load->view('inside', $data);
           }
-        }else{//if adm just change
-          //set and update exchangentries table and generates an exchange record
-          $exchanges = array(
-            'idOwner' => $this->input->post('scheduledOwnerUsers'),
-            'idManager' => $this->session->userdata['idUser'],
-            'idOccupier' => $this->input->post('scheduledOccupierUsers'),
-            'idScheduleOwner' => $this->input->post('ownerSchedule'),
-            'idScheduleOccupier' => $this->input->post('occupierSchedule'),
-            'scheduleDateOwner' => $this->input->post('ownerDate'),
-            'scheduleDateOccupier' => $this->input->post('occupierDate')
-          );
+
           $exchange = $this->Schedule_database->newExchange($exchanges);
           $data['message'] = 'Troca efetuada com sucesso!';
           $this->load->view('inside', $data);
         }
-      }else{
-        $data['message'] = 'Data menor que data atual!';
+      }else{//if adm just change
+        //set and update exchangentries table and generates an exchange record
+        $exchanges = array(
+          'idOwner' => $this->input->post('scheduledOwnerUsers'),
+          'idManager' => $this->session->userdata['idUser'],
+          'idOccupier' => $this->input->post('scheduledOccupierUsers'),
+          'idScheduleOwner' => $this->input->post('ownerSchedule'),
+          'idScheduleOccupier' => $this->input->post('occupierSchedule'),
+          'scheduleDateOwner' => $this->input->post('ownerDate'),
+          'scheduleDateOccupier' => $this->input->post('occupierDate')
+        );
+        $exchange = $this->Schedule_database->newExchange($exchanges);
+        $data['message'] = 'Troca efetuada com sucesso!';
         $this->load->view('inside', $data);
       }
+    }
+  }
+
+  function exchangeAdjustment(){
+    if(!$this->login_database->isLogged()){
+      redirect('signin');
+    }
+
+    $data['title'] = 'SIMO - Alteração de Escala';
+    $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+    $data['menu'] = '4';
+    $data['message'] = '';
+    $data['body'] = 'schedule/schedule_exchangeAdjustment';
+
+    $users = $this->Schedule_database->getAllUsers();
+    if ($users->num_rows() > 0) {
+
+      $users_option = "<option value='0' disabled selected>Adicionar...</option>";
+
+      foreach($users->result() as $line) {
+      $users_option .= "<option value='$line->idUser'>$line->nickname</option>";
+      }
+      $data['users'] = $users_option;
+    }
+
+    $this->form_validation->set_rules('scheduledOwnerUsers', 'scheduledOwnerUsers', 'required');
+    $this->form_validation->set_rules('users', 'users', 'required');
+    $this->form_validation->set_message('required', 'Selecione um Membro para a troca!');
+
+
+    if ($this->form_validation->run() == FALSE){
+      $this->load->view('inside', $data);
+    }else{
+
+      $exchangesAdjustment = array(
+        'idOwner' => $this->input->post('scheduledOwnerUsers'),
+        'idManager' => $this->session->userdata['idUser'],
+        'idOccupier' => $this->input->post('users'),
+        'idScheduleOwner' => $this->input->post('ownerSchedule'),
+        'idScheduleOccupier' => '0',
+        'scheduleDateOwner' => $this->input->post('ownerDate'),
+        'scheduleDateOccupier' => '0000-00-00'
+      );
+
+      $exchange = $this->Schedule_database->newExchange($exchangesAdjustment);
+      $data['message'] = 'Troca efetuada com sucesso!';
+      $this->load->view('inside', $data);
     }
   }
 
@@ -794,14 +874,4 @@ class Schedule extends CI_Controller {
 
 
   //end of section for exchange page
-
-
-  // function check_default($array){
-  //   foreach($array as $element){
-  //     if($element == '0'){
-  //       return FALSE;
-  //     }
-  //   }
-  //   return TRUE;
-  // }
 }

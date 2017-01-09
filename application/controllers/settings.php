@@ -10,17 +10,18 @@ class settings extends CI_Controller {
 		$this->load->model('settings_database');
 		$this->load->library('session');
 		$this->load->library('form_validation');
-		// if(!$this->login_database->isLogged()){
-		// 	redirect('signin');
-		// }
+
 	}
 
 	function user_settings(){
 
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
+
 		$data['title'] = 'SIMO - Configurações de Usuários';
 		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '0';
-		// $data['error'] = $this->input->get('error');
 		$data['body'] = 'settings/user_settings';
 		$data['cadastros'] = $this->settings_database->get();
 		$this->load->view('inside', $data);
@@ -28,13 +29,17 @@ class settings extends CI_Controller {
 
 	function user_create(){
 
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
+
 		$this->form_validation->set_rules('fullname', 'fullname', 'trim');
   	$this->form_validation->set_rules("email", "email", "valid_email");
   	$this->form_validation->set_rules('username', 'username', 'trim');
   	$this->form_validation->set_rules('nickname', 'nickname', 'trim');
 
 		if ($this->form_validation->run() == FALSE) {
-			$data['title'] = 'SIMO - Caadastrar Novo Usuário';
+			$data['title'] = 'SIMO - Cadastrar Novo Usuário';
  		 	$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
  		 	$data['menu'] = '0';
  		 	$data['error'] = $this->input->get('error');
@@ -88,6 +93,10 @@ class settings extends CI_Controller {
 
 	function change_password(){
 
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
+
   	$this->form_validation->set_rules('currpassword', 'currpassword', 'trim');
 		$this->form_validation->set_rules('newpassword', 'newpassword', 'trim');
 		$this->form_validation->set_rules('newpasswordconf', 'newpasswordconf', 'trim');
@@ -129,6 +138,10 @@ class settings extends CI_Controller {
 	}
 
 	function user_edit($id = null){
+
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
 
 		if ($id){
 			$cadastros = $this->settings_database->get($id);
@@ -210,6 +223,11 @@ class settings extends CI_Controller {
 	}
 
 	function user_delete($id = null) {
+
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
+
 		if ($this->settings_database->delete($id)) {
 
 			redirect('user_settings');

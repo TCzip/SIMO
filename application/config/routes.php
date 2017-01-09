@@ -65,9 +65,11 @@ $route['schedule_create'] = 'schedule/create';
 $route['schedule_groups'] = 'schedule/groups';
 $route['schedule_newGroup'] = 'schedule/newGroup';
 $route['schedule_exchange'] = 'schedule/exchange';
+$route['schedule_exchangeAdjustment'] = 'schedule/exchangeAdjustment';
 $route['change_password'] = 'settings/change_password';
 $route['user_settings'] = 'settings/user_settings';
 $route['schedule_viewByGroups'] = 'schedule/viewByGroups';
+$route['schedule_viewByMembers'] = 'schedule/viewByMembers';
 
 
 //actions

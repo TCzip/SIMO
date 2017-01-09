@@ -7,7 +7,7 @@
 			<?= anchor('user_create', 'Novo Cadastro', array('class' => 'btn btn-primary')); ?>
 		</div>
 		<div class="row">
-			<h3><?php echo $cadastros->num_rows(); echo ' registro(s)</h3>';
+			<h3><?php echo $cadastros->num_rows(); echo ' usuário(s)</h3>';
 			echo '</div>';
 			echo '<div class="row">';
 			echo '<div class="table-responsive">';

@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 
-$active_group = 'default';
+$active_group = 'hostinguer';
 $query_builder = TRUE;
 
 $db['default'] = array(
@@ -86,10 +86,10 @@ $db['default'] = array(
 
 $db['hostinguer'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => '',
-	'password' => '',
-	'database' => '',
+	'hostname' => 'mysql.hostinger.com.br',
+	'username' => 'u525614998_pr',
+	'password' => '99488626',
+	'database' => 'u525614998_ciccr',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

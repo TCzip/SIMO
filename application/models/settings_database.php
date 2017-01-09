@@ -100,7 +100,7 @@ class Settings_Database extends CI_Model {
     if ($id) {
       $this->db->where('idUser', $id);
     }
-    $this->db->order_by("idUser", 'asc');
+    $this->db->order_by("fullname", 'asc');
     return $this->db->get('users');
   }
 

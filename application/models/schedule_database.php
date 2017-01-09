@@ -93,10 +93,12 @@ class Schedule_database extends CI_Model {
       ->where(array('idUser' => $exchanges['idOwner'], 'scheduleDate' => $exchanges['scheduleDateOwner'], 'idSchedule' => $exchanges['idScheduleOwner']))
       ->update('exchangentries');
 
-    $this->db
-      ->set('idUser', $exchanges['idOwner'])
-      ->where(array('idUser' => $exchanges['idOccupier'], 'scheduleDate' => $exchanges['scheduleDateOccupier'], 'idSchedule' => $exchanges['idScheduleOccupier']))
-      ->update('exchangentries');
+    if ($exchanges['idScheduleOccupier'] != 0) {
+      $this->db
+        ->set('idUser', $exchanges['idOwner'])
+        ->where(array('idUser' => $exchanges['idOccupier'], 'scheduleDate' => $exchanges['scheduleDateOccupier'], 'idSchedule' => $exchanges['idScheduleOccupier']))
+        ->update('exchangentries');
+    }
 
     $result = $this->db
       ->insert('exchanges', $exchanges);
@@ -159,6 +161,17 @@ class Schedule_database extends CI_Model {
       ->get("users");
       return $result;
   }
+
+  function getAllUsers() {
+
+    $result = $this->db
+      ->select('idUser,nickname')
+      ->where('idPermission', 1)
+      ->order_by("nickname", "asc")
+      ->get("users");
+      return $result;
+  }
+
 
   function getUsers() {
 

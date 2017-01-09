@@ -11,14 +11,14 @@ class Inside extends CI_Controller {
     $this->load->library('session');
     $this->load->helper('date');
 		$this->load->model('login_database');
-		$this->session->userdata['logged'] = true;//logged false é o certo, ativar depois dos testes
-		if(!$this->login_database->isLogged()){
-			redirect('signin');
-		}
+
 	}
 
 	function home(){
 
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
 		$data['title'] = 'SIMO - Início';
 		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '1';
@@ -30,6 +30,10 @@ class Inside extends CI_Controller {
 	}
 
 	function schedule(){
+
+		if(!$this->login_database->isLogged()){
+			redirect('signin');
+		}
 		$data['title'] = 'SIMO - Escalas';
 		$data['sessionfullname'] = $this->session->userdata['sessionfullname'];
 		$data['menu'] = '4';
