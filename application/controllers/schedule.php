@@ -773,17 +773,17 @@ class Schedule extends CI_Controller {
       $result = $this->Schedule_database->getExchangeEntries($year,$month);//orderby date, idschedule
 
       $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-      $line =1;
+      $line = 1;
       while ($line != 5) {
-        for ($i=1; $i < $monthdays + 1; $i++) {
+        for ($i=1; $i <= $monthdays; $i++) {
           $internalMatriz[$i][$line] = '';
         }
       $line++;
       }
 
-      $line =1;
+      $line = 1;
       while ($line != 5) {
-        for ($i=1; $i < $monthdays + 1; $i++) {
+        for ($i=1; $i <= $monthdays; $i++) {
           $hint[$i][$line] = '';
         }
       $line++;
@@ -811,7 +811,7 @@ class Schedule extends CI_Controller {
         //write table header
         $table ='<table border="1" class="table table-bordered table-striped table-highlight"><tr width="40" >';
         $table .= '<th style="text-align:center;font-size:12px; " width="30">ESCALA</th>';
-        for ($i=1; $i < $monthdays + 1; $i++) {
+        for ($i=1; $i <= $monthdays; $i++) {
         $table .= '<th  style="text-align:center; text-size:12px; " width="30" >'.$i.'</th>';
         }
         //starts body
@@ -838,13 +838,13 @@ class Schedule extends CI_Controller {
           }
 
           //using internal matriz, fill all days and schedules
-          for ($i=1; $i < $monthdays; $i++) {
+          for ($i=1; $i <= $monthdays; $i++) {
 
             $table .= '<td style="text-align:center; padding-bottom:3px; font-size:12px;" title="'.$hint[$i][$line].'" >'
             . $internalMatriz[$i][$line] .'</td>';
           }
           $line++;
-          $table .='<th>'.'<tr height="40">';
+          $table .='<tr height="40">';
         }
         //closing table
         $table .= '</tbody></table>';
